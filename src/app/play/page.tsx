@@ -106,7 +106,7 @@ function Page() {
                     > 
                         {/* music playList songs container */}
                         <div
-                            className="flex flex-col w-max mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
+                            className="flex flex-col w-max lg:w-[36%] md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
                         >
                             {musicDetails.map((music: any) => (
 
