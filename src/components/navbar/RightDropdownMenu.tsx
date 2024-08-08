@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,6 +19,17 @@ import ifNotUserAvatar from '@/config/dataBase/userPrefs/ifNotUserAvatar'
 
 function RightDropdownMenu() {
     const { userPrefs, isUserLogin } = useAuth()
+    const [loading, setLoading] = useState(true)
+    useEffect(() => {
+        if (isUserLogin) {
+            setLoading(false)
+        } else {
+            setLoading(false)
+        }
+    }, [isUserLogin])
+    if (loading) {
+        return <p>loading...</p>
+    }
     return (
         <div>
             {
@@ -29,8 +40,8 @@ function RightDropdownMenu() {
                     <DropdownMenu>
                         <DropdownMenuTrigger className='cursor-pointer' asChild>
                             <img
-                                src={userPrefs.avatar ? 
-                                    String(userAvatarDBConfig.getUserAvatarPreviewWithPrefs(userPrefs?.avatar , 50)): String(ifNotUserAvatar.getUserInitials())}
+                                src={userPrefs.avatar ?
+                                    String(userAvatarDBConfig.getUserAvatarPreviewWithPrefs(userPrefs?.avatar, 50)) : String(ifNotUserAvatar.getUserInitials())}
                                 alt="User"
                                 className='w-[40px] h-[40px] rounded-full'
                             />
