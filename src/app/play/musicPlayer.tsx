@@ -18,7 +18,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
     const [duration, setDuration] = useState<number>(0);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [currentSongInfo, setCurrentSongInfo] = useState<any>();
-    const { isSongPlaying } = useAuth();
+
 
     const router = useRouter()
 
@@ -75,7 +75,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
         if (trackIndex >= 0 && trackIndex < musicIds.length && audio) {
 
             setCurrentSongInfo(allMusicInfo[currentTrackIndex]);
-            // console.log('Current song info at play music func:', allMusicInfo[trackIndex]);
+            console.log('Current song info at play music func:', allMusicInfo[trackIndex]);
 
             const currentMusicId = (allMusicInfo[trackIndex].musicId ?
                 String(music.getMusic(allMusicInfo[trackIndex].musicId)) :
@@ -112,14 +112,15 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
     }, [playMusicWithId, musicIds]);
 
     useEffect(() => {
-        if (isSongPlaying && currentTrackIndex !== -1) {
+        if (currentTrackIndex !== -1) {
             playMusic(currentTrackIndex);
+            setPpc('pause')
             setCurrentSongInfo(allMusicInfo[currentTrackIndex]);
-            // console.log('Current song info:', currentSongInfo);
+            console.log('Current song info:', currentSongInfo);
 
         }
 
-    }, [isSongPlaying, currentTrackIndex]);
+    }, [currentTrackIndex]);
 
     const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
         const audio = audioRef.current;
@@ -218,13 +219,32 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
         window.removeEventListener('popstate', handleBackButton);
         router.push('/')
     };
+    const [ppc, setPpc] = useState<string>()
     const playAudio = () => {
-        if (audioRef.current?.paused) {
-            audioRef.current?.play()
-        }else{
-            audioRef.current?.pause()
+
+
+        if (audioRef?.current?.src) {
+            // console.log(audioRef?.current.src);
+
+            if (audioRef.current?.paused) {
+                audioRef.current?.play()
+                setPpc('pause')
+
+            } else {
+                audioRef.current?.pause()
+                setPpc('play')
+            }
+        } else {
+            console.log('no audio ref');
+            setPpc('pause')
+            setCurrentTrackIndex(0)
         }
+
     }
+    useEffect(() => {
+        console.log('teshdgsayj', currentSongInfo);
+
+    }, [currentSongInfo])
     const pauseAudio = () => {
         // console.log('pause audio');
         audioRef.current?.pause()
@@ -235,7 +255,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
         <div className={` w-[97%]  mx-auto fixed  bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2`}>
 
             <button onClick={playPreviousTrack}>👈</button>
-            <button onClick={playAudio} >pl/pa</button>
+            <button onClick={playAudio} id='ppc' >{ppc || 'play'}</button>
             <button onClick={playNextTrack}>⏭️</button>
             {/* Seek bar */}
             <input
