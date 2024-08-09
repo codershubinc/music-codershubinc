@@ -254,9 +254,13 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
     return (
         <div className={` w-[97%]  mx-auto fixed  bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2`}>
 
-            <button onClick={playPreviousTrack}>👈</button>
-            <button onClick={playAudio} id='ppc' >{ppc || 'play'}</button>
-            <button onClick={playNextTrack}>⏭️</button>
+            <div
+                className='flex justify-evenly'
+            >
+                <button onClick={playPreviousTrack}>👈</button>
+                <button onClick={playAudio} id='ppc' >{ppc || 'play'}</button>
+                <button onClick={playNextTrack}>⏭️</button>
+            </div>
             {/* Seek bar */}
             <input
                 type="range"
