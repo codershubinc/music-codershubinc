@@ -50,7 +50,7 @@ function MusicPlayerFull(
 
         <div
             className={
-                `  h-[99vh] w-[99vw] m-auto top-0 left-0 right-0 bottom-0 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row lg:justify-evenly md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
+                `  h-[99vh] w-[100vw] m-0  top-0 left-0 right-0 bottom-0 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row lg:justify-evenly md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
             }
         >
             <Button
