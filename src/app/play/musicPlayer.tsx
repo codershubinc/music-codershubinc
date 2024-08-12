@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import music from '@/config/dataBase/playListsDb/music';
-import { useAuth } from '@/context/AuthContext';
-import userAvatarDBConfig from '@/config/dataBase/userPrefs/userAvatarDBConfig';
 import { useRouter } from 'next/navigation';
-import LikeBtn from '@/components/Buttons/likeBtn';
+import MediaSessionFunc from './mediaSession';
+import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from './playControllers';
 
 interface Props {
     musicIds: string[];
@@ -19,83 +18,25 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [currentSongInfo, setCurrentSongInfo] = useState<any>();
 
+    // ====> test useStates
+    const [ppc, setPpc] = useState<string>()
+    const [isPlaying, setIsPlaying] = useState(false);
+
 
     const router = useRouter()
 
+
+    // =====> at initial render defining the audio ref as a music player
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            audioRef.current = new Audio();
-        }
-
-        const audio = audioRef.current;
-
-        const handleAudioEnd = () => {
-            // console.log('Audio has ended');
-            playNextTrack();
-        };
-
-        const handleTimeUpdate = () => {
-            if (audio) setCurrentTime(audio.currentTime);
-        };
-
-        const handleLoadedMetadata = () => {
-            if (audio) setDuration(audio.duration);
-        };
-
-        if (audio) {
-            audio.addEventListener('ended', handleAudioEnd);
-            audio.addEventListener('timeupdate', handleTimeUpdate);
-            audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-        }
-
-        return () => {
-            if (audio) {
-                audio.removeEventListener('ended', handleAudioEnd);
-                audio.removeEventListener('timeupdate', handleTimeUpdate);
-                audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-            }
-        };
+        player(
+            audioRef,
+            setCurrentTrackIndex,
+            setDuration,
+            setCurrentTime
+        )
     }, []);
 
-    const playNextTrack = () => {
-        setCurrentTrackIndex(prevIndex => prevIndex + 1)
-        // console.log('Playing next track:', currentTrackIndex + 1);
-    };
-
-    const playPreviousTrack = () => {
-        setCurrentTrackIndex(prevIndex => {
-            const previousIndex = prevIndex > 0 ? (prevIndex - 1) : (musicIds.length - 1);
-            // console.log('Playing previous track:', previousIndex);
-            return previousIndex;
-        });
-    };
-
-    const playMusic = (trackIndex: number) => {
-        const audio = audioRef.current;
-        if (trackIndex >= 0 && trackIndex < musicIds.length && audio) {
-
-            setCurrentSongInfo(allMusicInfo[currentTrackIndex]);
-            console.log('Current song info at play music func:', allMusicInfo[trackIndex]);
-
-            const currentMusicId = (allMusicInfo[trackIndex].musicId ?
-                String(music.getMusic(allMusicInfo[trackIndex].musicId)) :
-                String(allMusicInfo[trackIndex].musicUri)
-            );
-
-            console.log('Playing music with ID:', currentMusicId);
-            audio.src = currentMusicId;
-            audio.play().catch(error => {
-                console.error('Error playing music:', error);
-            });
-        } else if (trackIndex >= musicIds.length) {
-            // console.error('Track index out of bounds:', trackIndex);
-            setCurrentTrackIndex(0);
-
-        } else {
-            console.error('Invalid track index:', trackIndex);
-        }
-    };
-
+    // =======> when this useEffect runs, it will set the current track index
     useEffect(() => {
         if (playMusicWithId) {
             const trackIndex = musicIds.indexOf(playMusicWithId);
@@ -111,155 +52,60 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
         }
     }, [playMusicWithId, musicIds]);
 
+    // =====>  here when track index is seed , then this call play func
+
     useEffect(() => {
         if (currentTrackIndex !== -1) {
-            playMusic(currentTrackIndex);
+            playMusic(
+                currentTrackIndex,
+                audioRef,
+                allMusicInfo,
+                musicIds,
+                setCurrentSongInfo,
+                setCurrentTrackIndex,
+                currentTrackIndex,
+                music,
+                setIsPlaying
+            );
             setPpc('pause')
             setCurrentSongInfo(allMusicInfo[currentTrackIndex]);
-            console.log('Current song info:', currentSongInfo);
-
+            // console.log('Current song info:', currentSongInfo);
         }
-
     }, [currentTrackIndex]);
 
-    const handleSeek = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const audio = audioRef.current;
-        const newTime = parseFloat(event.target.value);
-        if (audio) {
-            audio.currentTime = newTime;
-            setCurrentTime(newTime);
-        }
-    };
 
-    // >=====> media session api handling
-    useEffect(() => {
-        if (currentSongInfo === undefined) return console.log('currentSongInfo is undefined');
-
-        const handleKeyDown = (event: KeyboardEvent) => {
-            switch (event.key) {
-                case 'MediaTrackPrevious':
-                    playPreviousTrack();
-                    break;
-                case 'MediaTrackNext':
-                    playNextTrack();
-                    break;
-                default:
-                    break;
-            }
-        };
-
-        if ('mediaSession' in navigator) {
-            const musicAvatarUrl =
-                (
-                    currentSongInfo?.musicAvatar ?
-                        userAvatarDBConfig.getUserAvatarPreviewWithPrefs(currentSongInfo.musicAvatar, 500) :
-                        currentSongInfo?.musicAvatarUrl
-                )
-            // console.log('music avatar url', musicAvatarUrl.href);
-
-            // console.log('currentSongInfo', currentSongInfo);
-            // console.log('music avatar id', currentSongInfo?.musicAvatar);
-
-
-            navigator.mediaSession.metadata = new MediaMetadata({
-
-                title: currentSongInfo?.musicName || 'music',
-                artist: currentSongInfo?.singer.map((singer: string) => singer.trim()).join(' , ') || 'Singer Name',
-                album: currentSongInfo?.musicName || '',
-                artwork: [
-                    {
-                        src: String(musicAvatarUrl),
-                        sizes: '500x500',
-                        type: 'image/png',
-                    },
-                ],
-            })
-            // Handling the previous track action here
-
-            navigator.mediaSession.setActionHandler('previoustrack', () => {
-                playPreviousTrack();
-            })
-
-
-
-            // Handling the next track action here
-
-            navigator.mediaSession.setActionHandler('nexttrack', () => {
-                playNextTrack();
-            })
-            // Adding keyboard event listeners
-            document.addEventListener('keydown', handleKeyDown);
-
-        }
-
-        navigator.mediaSession.setActionHandler('seekto', (val: any) => {
-            console.log('seek to');
-            handleSeek(val)
-
-
-        })
-
-
-        // Cleanup: remove event listener on component unmount
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-
-    }, [currentSongInfo]);
-
+    // =====> handling back button
     const handleBackButton = () => {
-        // console.log('back btn called');
-
-        pauseAudio()
-        // const audio = audioRef.current || new Audio();
-        // audio.src = 'df' 
-
-        // audioRef.current?.remove()
-        // audioRef.current = null
+        pauseAudio(audioRef, isPlaying)
         window.removeEventListener('popstate', handleBackButton);
         router.push('/')
     };
-    const [ppc, setPpc] = useState<string>()
-    const playAudio = () => {
-
-
-        if (audioRef?.current?.src) {
-            // console.log(audioRef?.current.src);
-
-            if (audioRef.current?.paused) {
-                audioRef.current?.play()
-                setPpc('pause')
-
-            } else {
-                audioRef.current?.pause()
-                setPpc('play')
-            }
-        } else {
-            console.log('no audio ref');
-            setPpc('pause')
-            setCurrentTrackIndex(0)
-        }
-
-    }
-    useEffect(() => {
-        console.log('teshdgsayj', currentSongInfo);
-
-    }, [currentSongInfo])
-    const pauseAudio = () => {
-        // console.log('pause audio');
-        audioRef.current?.pause()
-    }
-
     window.addEventListener('popstate', handleBackButton);
+
+
+
+    // ==> media session api
+    useEffect(() => {
+        MediaSessionFunc(
+            {
+                currentSongInfo,
+                playNextTrackFn: () => playNextTrack(setCurrentTrackIndex),
+                playPreviousTrackFn: () => playPreviousTrack(setCurrentTrackIndex, musicIds),
+                setIsPlaying,
+                playFn: () => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)
+            }
+        )
+    }, [currentSongInfo])
+    useEffect(() => { console.log('isPlaying', isPlaying) }, [isPlaying])
     return (
         <div className={` w-[97%]  mx-auto fixed  bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2`}>
 
             <div
                 className='flex justify-evenly'
             >
-                <button onClick={playPreviousTrack}>👈</button>
-                <button onClick={playAudio} id='ppc' >{ppc || 'play'}</button>
-                <button onClick={playNextTrack}>⏭️</button>
+                <button onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>👈</button>
+                <button onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)} >{ppc || 'play'}</button>
+                <button onClick={() => playNextTrack(setCurrentTrackIndex)}>⏭️</button>
             </div>
             {/* Seek bar */}
             <input
@@ -267,7 +113,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                 min="0"
                 max={duration}
                 value={currentTime}
-                onChange={handleSeek}
+                onChange={(event) => handleSeek(event, audioRef, setCurrentTime)}
                 style={{ width: '100%' }}
             />
             <div className="flex flex-row  gap-5">
