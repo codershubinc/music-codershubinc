@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import music from '@/config/dataBase/playListsDb/music';
 import { useRouter } from 'next/navigation';
-import MediaSessionFunc from './mediaSession';
-import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from './playControllers';
+import MediaSessionFunc from '../../utils/musicControllers/mediaSession';
+import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from '../../utils/musicControllers/playControllers';
 import MusicPlayerFull from '@/components/cust/musicPlayerFullScreen';
-
 interface Props {
     musicIds: string[];
     playMusicWithId: string;
@@ -13,49 +12,38 @@ interface Props {
 }
 
 const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo }) => {
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(-1);
+    const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1);
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
     const [currentSongInfo, setCurrentSongInfo] = useState<any>();
 
-    // ====> test useStates
-    const [ppc, setPpc] = useState<string>()
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [fullScreen, setFullScreen] = useState(false)
+    // Test useStates
+    const [ppc, setPpc] = useState<string>('play');
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [fullScreen, setFullScreen] = useState<boolean>(false);
 
+    const router = useRouter();
 
-    const router = useRouter()
-
-
-    // =====> at initial render defining the audio ref as a music player
+    // Initialize audio player
     useEffect(() => {
-        player(
-            audioRef,
-            setCurrentTrackIndex,
-            setDuration,
-            setCurrentTime
-        )
+        player(audioRef, setCurrentTrackIndex, setDuration, setCurrentTime);
     }, []);
 
-    // =======> when this useEffect runs, it will set the current track index
+    // Set current track index on initial render
     useEffect(() => {
         if (playMusicWithId) {
             const trackIndex = musicIds.indexOf(playMusicWithId);
-
             if (trackIndex !== -1) {
-                // console.log('Setting initial track index:', trackIndex);
                 setCurrentTrackIndex(trackIndex);
                 setCurrentSongInfo(allMusicInfo[trackIndex]);
-                // console.log('Current song info:', currentSongInfo);
             } else {
                 console.error('Track ID not found in musicIds:', playMusicWithId);
             }
         }
     }, [playMusicWithId, musicIds]);
 
-    // =====>  here when track index is seed , then this call play func
-
+    // Play music when track index is set
     useEffect(() => {
         if (currentTrackIndex !== -1) {
             playMusic(
@@ -69,58 +57,62 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                 music,
                 setIsPlaying
             );
-            setPpc('pause')
+            setPpc('pause');
             setCurrentSongInfo(allMusicInfo[currentTrackIndex]);
-            // console.log('Current song info:', currentSongInfo);
         }
-    }, [currentTrackIndex]);
+    }, [currentTrackIndex, allMusicInfo, musicIds]);
+
+    // Handle back button press
+    const handleBackButton = useCallback(() => {
+        // Pause the audio
+        pauseAudio(audioRef, setIsPlaying);
+        const audio = audioRef.current;
+
+        if (audio) {
+            audio.currentTime = audio.duration;
+            setCurrentTime(audio.duration);
+        }
+        router.push('/');
+        return () => {
+            window.removeEventListener('popstate', handleBackButton);
+        };
+
+    }, [audioRef, router]);
 
 
-    // =====> handling back button
-    const handleBackButton = () => {
-        pauseAudio(audioRef, isPlaying)
-        window.removeEventListener('popstate', handleBackButton);
-        router.push('/')
-    };
     window.addEventListener('popstate', handleBackButton);
 
-    const handleFullScreen = (id: string) => {
-        if (id) {
-            const trackIndex = musicIds.indexOf(id);
 
-            if (trackIndex !== -1) {
-                // console.log('Setting initial track index:', trackIndex);
-                setCurrentTrackIndex(trackIndex);
-                setCurrentSongInfo(allMusicInfo[trackIndex]);
-                // console.log('Current song info:', currentSongInfo);
-            } else {
-                console.error('Track ID not found in musicIds:', id);
-            }
+    // Handle full screen
+    const handleFullScreen = useCallback((id: string) => {
+        const trackIndex = musicIds.indexOf(id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex);
+            setCurrentSongInfo(allMusicInfo[trackIndex]);
+        } else {
+            console.error('Track ID not found in musicIds:', id);
         }
-    }
+    }, [musicIds, allMusicInfo]);
 
-
-    // ==> media session api
+    // Media Session API
     useEffect(() => {
-        MediaSessionFunc(
-            {
-                currentSongInfo,
-                playNextTrackFn: () => playNextTrack(setCurrentTrackIndex),
-                playPreviousTrackFn: () => playPreviousTrack(setCurrentTrackIndex, musicIds),
-                setIsPlaying,
-                playFn: () => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)
-            }
-        )
-    }, [currentSongInfo])
-    useEffect(() => { console.log('isPlaying', isPlaying) }, [isPlaying])
+        MediaSessionFunc({
+            currentSongInfo,
+            playNextTrackFn: () => playNextTrack(setCurrentTrackIndex),
+            playPreviousTrackFn: () => playPreviousTrack(setCurrentTrackIndex, musicIds),
+            setIsPlaying,
+            playFn: () => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying),
+        });
+    }, [currentSongInfo, musicIds]);
+
     return (
-        fullScreen ?
+        fullScreen ? (
             <MusicPlayerFull
                 currentSongInfo={currentSongInfo}
                 isDisplay={fullScreen}
                 allMusicInfo={allMusicInfo}
-                playMusic={(id) => handleFullScreen(id)}
-                setIsDisplay={(val: boolean) => setFullScreen(val)}
+                playMusic={handleFullScreen}
+                setIsDisplay={setFullScreen}
                 plPaFn={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}
                 nextFn={() => playNextTrack(setCurrentTrackIndex)}
                 prevFn={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}
@@ -129,14 +121,13 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                 currentTime={currentTime}
                 isPlaying={isPlaying}
             />
-            :
-            <div className={` w-[97%]  mx-auto fixed  bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2`}>
-
-                <div
-                    className='flex justify-evenly'
-                >
+        ) : (
+            <div className="w-[97%] mx-auto fixed bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2">
+                <div className='flex justify-evenly'>
                     <button onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>👈</button>
-                    <button onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)} >{ppc || 'play'}</button>
+                    <button onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}>
+                        {ppc}
+                    </button>
                     <button onClick={() => playNextTrack(setCurrentTrackIndex)}>⏭️</button>
                 </div>
                 {/* Seek bar */}
@@ -148,25 +139,18 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                     onChange={(event) => handleSeek(event, audioRef, setCurrentTime)}
                     style={{ width: '100%' }}
                 />
-                <div className="flex flex-row  gap-5">
-                    <p
-                        className='w-[70%] overflow-hidden text-nowrap'
-                    >
-                        {currentSongInfo?.musicName || 'play the music'}
+                <div className="flex flex-row gap-5">
+                    <p className='w-[70%] overflow-hidden text-nowrap'>
+                        {currentSongInfo?.musicName || 'Play the music'}
                     </p>
-
-                    {/* <LikeBtn musicId={currentSongInfo?.$id} /> */}
-
-                    <div
-                        className='w-[30%]'
-                    >
+                    <div className='w-[30%]'>
                         {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
                         {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
                     </div>
                 </div>
-                <button onClick={() => setFullScreen(true)} >dis</button>
+                <button onClick={() => setFullScreen(true)}>dis</button>
             </div>
-
+        )
     );
 };
 

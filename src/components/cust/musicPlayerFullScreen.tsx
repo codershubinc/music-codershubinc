@@ -1,8 +1,8 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button } from '../ui/button'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
-import { DeleteIcon, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
+import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 type SongInfo = {
     $id: string;
     musicName: string;
@@ -41,13 +41,6 @@ function MusicPlayerFull(
     }: MusicPlayerProps
 ) {
 
-    useEffect(() => {
-        if (allMusicInfo) {
-            console.log('all music info', allMusicInfo);
-            console.log('current song info', currentSongInfo);
-        }
-    }, [])
-
 
 
 
@@ -65,7 +58,7 @@ function MusicPlayerFull(
                 onClick={() => setIsDisplay(false)}
             > x</Button>
             <div
-                className='mt-9 text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
+                className='mt-9 text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-max lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
             >
                 <div
                     className='min-h-32'
@@ -87,7 +80,7 @@ function MusicPlayerFull(
                     src={
                         // currentSongInfo?.musicAvatarUrl
                         // ||
-                        "https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png"
+                        "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
                     }
                     alt="Music Avatar"
                     className=' w-[97vw] md:w-96 object-cover rounded-3xl m-1'
@@ -99,9 +92,10 @@ function MusicPlayerFull(
                     max={duration}
                     value={currentTime}
                     onChange={(event) => seekFn(event)}
-                    style={{ width: '100%' }}
+                    style={{ width: '100%' , animation: 'ease-in-out' ,  }}
+                    className='w-full accent-slate-600 transition-transform'
                 />
-                <div className="flex justify-around">
+                <div className="flex w-full mt-3 justify-around">
                     <button onClick={prevFn}>
                         <SkipBack className="w-6 h-6 text-blue-500" />
                     </button>
@@ -135,13 +129,13 @@ function MusicPlayerFull(
             </div>
 
 
-            <div className=' my-auto mt-3  h-[100%]  justify-around items-center  hidden lg:block '>
+            <div className=' lg:flex my-auto mt-3  h-[100%] w-fit  justify-around items-center   hidden  '>
                 <div
                     className='flex'
                 >
                     {/* music playList songs container */}
                     <div
-                        className="flex flex-col w-max lg:w-[36%] md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
+                        className="flex flex-col w-max lg:w-fit md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
                     >
                         {allMusicInfo.map((music: any) => (
 
