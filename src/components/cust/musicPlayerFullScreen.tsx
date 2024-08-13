@@ -67,7 +67,7 @@ function MusicPlayerFull(
 
         <div
             className={
-                `  h-[99vh] w-[100vw] m-0  top-0 left-0 right-0 bottom-0 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row lg:justify-evenly md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
+                `  h-max-[99vh] w-[100vw] m-0  top-0 left-0 right-0 bottom-0 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row lg:justify-evenly md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
             }
         >
             <Button
@@ -117,7 +117,7 @@ function MusicPlayerFull(
 
                 {/* ====> bottom controllers */}
                 <div
-                    className='w-full flex flex-wrap justify-between p-1 bg-slate-950 min-h-20 items-center rounded-3xl border border-slate-600  md:p-3  '
+                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
                     <div className="flex w-full mt-3 mb-2 justify-around">
                         <button onClick={prevFn}>
