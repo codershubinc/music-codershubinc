@@ -54,9 +54,9 @@ export class MusicPlayListByUser {
     }
 
     async getMusicPlayListByUser(
-        query: any
+        query: string
     ) {
-        return await this.databases.listDocuments(
+        return await this.databases.getDocument(
             conf.appwriteDatabaseId,
             conf.appwriteCollectionPlayListByUserId,
             query
