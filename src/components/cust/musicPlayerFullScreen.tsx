@@ -1,13 +1,15 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
 import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
+import { inf } from '@/utils/saavnApis/getSongInfo.api';
 type SongInfo = {
     $id: string;
     musicName: string;
     singer: string[];
     musicAvatarUrl: string;
+    url: string
 }
 type MusicPlayerProps = {
     currentSongInfo: SongInfo;
@@ -41,8 +43,23 @@ function MusicPlayerFull(
     }: MusicPlayerProps
 ) {
 
+    const [fetchedSongInfo, setFetchedSongInfo] = useState<any>()
+
+    useEffect(() => {
+
+        async function f(url: string) {
+            console.log('currentSongInfo.url', currentSongInfo.url);
+            let res = await inf(url)
+            console.log('fetched song info', res?.data?.data[0] );
+            setFetchedSongInfo(res?.data?.data[0] || [])
+
+        }
 
 
+        if (currentSongInfo?.url) {
+            f(currentSongInfo.url)
+        }
+    }, [currentSongInfo])
 
 
     return (
@@ -54,25 +71,27 @@ function MusicPlayerFull(
             }
         >
             <Button
-                className='absolute top-0 right-0'
+                className='absolute top-0 right-0 rotate-180'
                 onClick={() => setIsDisplay(false)}
-            > x</Button>
+            >^</Button>
             <div
                 className='mt-9 text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-max lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
             >
                 <div
-                    className='min-h-32'
+                    className='min-h-32 flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
                 >
                     <h1
                         className='ml-2 text-2xl'
                     >
                         <span className='font-bold text-slate-700 text-lg'> Currently Playing ...</span>
                         <br />
-                        {DecodeHTMLEntities(currentSongInfo?.musicName)}
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....')}
                     </h1>
-                    <p>
+                    <hr className='w-[95%] mx-auto' />
+                    <p className='pl-2'>
                         <span className='font-bold text-slate-700 text-lg'> By ...</span>
-                        {DecodeHTMLEntities(currentSongInfo?.singer.map((singer: string) => singer.trim()).join(' , '))}
+                        <br />
+                        {DecodeHTMLEntities(currentSongInfo?.singer.map((singer: string) => singer.trim()).join(' , ') || 'singers ....')}
                     </p>
                 </div>
 
@@ -92,32 +111,34 @@ function MusicPlayerFull(
                     max={duration}
                     value={currentTime}
                     onChange={(event) => seekFn(event)}
-                    style={{ width: '100%' , animation: 'ease-in-out' ,  }}
+                    style={{ width: '100%', animation: 'ease-in-out', }}
                     className='w-full accent-slate-600 transition-transform'
                 />
-                <div className="flex w-full mt-3 justify-around">
-                    <button onClick={prevFn}>
-                        <SkipBack className="w-6 h-6 text-blue-500" />
-                    </button>
-                    <button onClick={plPaFn}>
-                        {isPlaying ? (
-                            <Pause className="w-6 h-6 text-blue-500" />
-                        ) : (
-                            <Play
-                                className="w-6 h-6  text-slate-600"
-                            />
-                        )}
-                    </button>
-                    <button onClick={nextFn}>
-                        <SkipForward className="w-6 h-6 text-blue-500" />
-                    </button>
-                </div>
 
+                {/* ====> bottom controllers */}
                 <div
-                    className='w-full flex flex-wrap justify-between'
+                    className='w-full flex flex-wrap justify-between p-1 bg-slate-950 min-h-20 items-center rounded-3xl border border-slate-600  md:p-3  '
                 >
+                    <div className="flex w-full mt-3 mb-2 justify-around">
+                        <button onClick={prevFn}>
+                            <SkipBack className="w-6 h-6 text-blue-500" />
+                        </button>
+                        <button onClick={plPaFn}>
+                            {isPlaying ? (
+                                <Pause className="w-6 h-6 text-blue-500" />
+                            ) : (
+                                <Play
+                                    className="w-6 h-6  text-slate-600"
+                                />
+                            )}
+                        </button>
+                        <button onClick={nextFn}>
+                            <SkipForward className="w-6 h-6 text-blue-500" />
+                        </button>
+                    </div>
+                    <hr className='w-[95%]' />
                     <div className='ml-1'>
-                        {DecodeHTMLEntities(currentSongInfo?.musicName)}
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....')}
                     </div>
                     <div
                         className='w-[30%]'

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import MediaSessionFunc from '../../utils/musicControllers/mediaSession';
 import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from '../../utils/musicControllers/playControllers';
 import MusicPlayerFull from '@/components/cust/musicPlayerFullScreen';
+import { Button } from '@/components/ui/button';
 interface Props {
     musicIds: string[];
     playMusicWithId: string;
@@ -148,7 +149,10 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                         {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
                     </div>
                 </div>
-                <button onClick={() => setFullScreen(true)}>dis</button>
+                <Button
+                className='absolute top-0 right-0  '
+                onClick={() => setFullScreen(true)}
+            >^</Button>
             </div>
         )
     );
