@@ -101,13 +101,13 @@ function Page() {
                     Please login to play music
                 </div>
             ) : (
-                <div className=' my-auto mt-3  h-[100%]  justify-around items-center '>
+                <div className=' my-auto mt-3  h-fit min-h-screen bg-black justify-around items-center '>
                     <div
-                        className='flex'
+                        className='flex pb-11 '
                     > 
                         {/* music playList songs container */}
                         <div
-                            className="flex flex-col w-max lg:w-[36%] md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
+                            className="flex flex-col w-max lg:w-[36%] md:w-[50%] mx-auto h-full border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
                         >
                             {musicDetails.map((music: any) => (
 
