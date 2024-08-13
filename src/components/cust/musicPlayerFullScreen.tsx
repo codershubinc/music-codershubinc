@@ -59,6 +59,8 @@ function MusicPlayerFull(
         if (currentSongInfo?.url) {
             f(currentSongInfo.url)
         }
+        console.log('no song url found', currentSongInfo?.url);
+        
     }, [currentSongInfo])
 
 
@@ -75,7 +77,7 @@ function MusicPlayerFull(
                 onClick={() => setIsDisplay(false)}
             >^</Button>
             <div
-                className='mt-9 text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-max lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
+                className='mt-9 mx-auto text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-max lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
             >
                 <div
                     className='min-h-32 flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
@@ -85,7 +87,7 @@ function MusicPlayerFull(
                     >
                         <span className='font-bold text-slate-700 text-lg'> Currently Playing ...</span>
                         <br />
-                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....')}
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
                     </h1>
                     <hr className='w-[95%] mx-auto' />
                     <p className='pl-2'>
@@ -102,7 +104,7 @@ function MusicPlayerFull(
                         "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
                     }
                     alt="Music Avatar"
-                    className=' w-[97vw] md:w-96 object-cover rounded-3xl m-1'
+                    className=' w-[97%] md:w-96 object-cover rounded-3xl m-1'
                 />
 
                 <input
@@ -137,8 +139,8 @@ function MusicPlayerFull(
                         </button>
                     </div>
                     <hr className='w-[95%]' />
-                    <div className='ml-1'>
-                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....')}
+                    <div className='ml-1 w-[65%] overflow-hidden h-12 '>
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
                     </div>
                     <div
                         className='w-[30%]'

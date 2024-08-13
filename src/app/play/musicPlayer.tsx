@@ -6,6 +6,7 @@ import MediaSessionFunc from '../../utils/musicControllers/mediaSession';
 import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from '../../utils/musicControllers/playControllers';
 import MusicPlayerFull from '@/components/cust/musicPlayerFullScreen';
 import { Button } from '@/components/ui/button';
+import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 interface Props {
     musicIds: string[];
     playMusicWithId: string;
@@ -142,7 +143,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                 />
                 <div className="flex flex-row gap-5">
                     <p className='w-[70%] overflow-hidden text-nowrap'>
-                        {currentSongInfo?.musicName || 'Play the music'}
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'Play the music')}
                     </p>
                     <div className='w-[30%]'>
                         {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
@@ -150,9 +151,9 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                     </div>
                 </div>
                 <Button
-                className='absolute top-0 right-0  '
-                onClick={() => setFullScreen(true)}
-            >^</Button>
+                    className='absolute top-0 right-0  '
+                    onClick={() => setFullScreen(true)}
+                >^</Button>
             </div>
         )
     );

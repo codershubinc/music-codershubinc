@@ -144,7 +144,7 @@ function Page() {
             <>
                 <PageUi>
                     <h1 className='text-center text-4xl text-red-700'>You are not an admin</h1>
-                    <h2 className='text-center text-3xl text-green-700'>Please contact your admin to get access</h2>
+                    <h2 className='text-center text-3xl text-green-700'>Please contact your admin to get access or wait a while ...</h2>
                 </PageUi>
             </>
         );

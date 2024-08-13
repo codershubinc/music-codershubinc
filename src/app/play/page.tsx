@@ -11,6 +11,7 @@ import PageUi from '@/components/page/pageui';
 import userAvatarDBConfig from '@/config/dataBase/userPrefs/userAvatarDBConfig';
 import { AuroraBackground } from '@/components/ui/aurora-background';
 import { LampContainer } from '@/components/ui/lamp';
+import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 
 function Page() {
     const [playListId, setPlayListId] = useState<string>('');
@@ -133,7 +134,7 @@ function Page() {
                                         className='w-12 h-12 object-cover rounded-3xl'
                                     />
                                     <h2 className="text-lg font-semibold mx-2 text-nowrap overflow-hidden">
-                                        {music.musicName}
+                                        {DecodeHTMLEntities(music.musicName || '')}
                                     </h2>
                                 </div>
                             ))}

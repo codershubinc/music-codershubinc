@@ -1,4 +1,5 @@
 import userAvatarDBConfig from "@/config/dataBase/userPrefs/userAvatarDBConfig";
+import DecodeHTMLEntities from "../func/htmlDecode";
 
 interface MediaSessionFuncProps {
     currentSongInfo: {
@@ -16,7 +17,7 @@ interface MediaSessionFuncProps {
 const MediaSessionFunc = ({
     currentSongInfo,
     playNextTrackFn,
-    playPreviousTrackFn, 
+    playPreviousTrackFn,
     playFn,
 }: MediaSessionFuncProps) => {
     if (!currentSongInfo) {
@@ -30,9 +31,9 @@ const MediaSessionFunc = ({
 
     const setupMediaSessionMetadata = () => {
         navigator.mediaSession.metadata = new MediaMetadata({
-            title: currentSongInfo.musicName || 'Unknown Title',
-            artist: currentSongInfo.singer?.map(singer => singer.trim()).join(', ') || 'Unknown Artist',
-            album: currentSongInfo.musicName || 'Unknown Album',
+            title: DecodeHTMLEntities(currentSongInfo?.musicName || 'Unknown Title'),
+            artist: DecodeHTMLEntities(currentSongInfo.singer?.map(singer => singer.trim()).join(', ') || 'Unknown Artist'),
+            album: DecodeHTMLEntities(currentSongInfo.musicName || 'Unknown Album'),
             artwork: [
                 {
                     src: String(musicAvatarUrl),
