@@ -194,7 +194,7 @@ function MusicPlayerFull(
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
-                    {currentUser && currentSongInfo ?
+                    {currentUser && currentSongInfo && user ?
 
                         (
                             currentUser?.labels?.includes('admin') ?
@@ -306,3 +306,5 @@ function MusicPlayerFull(
 }
 
 export default MusicPlayerFull
+
+
