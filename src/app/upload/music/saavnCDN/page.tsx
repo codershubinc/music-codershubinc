@@ -3,41 +3,51 @@ import PageUi from '@/components/page/pageui'
 import React, { useEffect, useState } from 'react'
 import uploadMusicToDb from './upl';
 import { useRouter } from 'next/navigation';
-import Input from '@/components/input/Input';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import SearchIfSingerPlayListExist from '../searchIfSingerPlayListExist';
 import musicPlayList from '@/config/dataBase/playListsDb/musicPlayList';
 import { useAuth } from '@/context/AuthContext';
+import toast from 'react-hot-toast';
 
 function Page() {
     const [loading, setLoading] = useState(true)
     const { handleSubmit, register } = useForm()
     const [isAdmin, setIsAdmin] = useState(false)
     const { currentUser } = useAuth()
+    const navigate = useRouter()
+
+
+
     const upl = async (formData: any) => {
+
         const link = formData.link
         const musicPlayListId = formData.musicPlayListId
         console.log('kink', link, ' musicPlayListId', musicPlayListId);
-
+        let uploadingMusicConfig
         setLoading(true)
         try {
             if (!link) {
                 console.log('Link not found' + 'enter link');
                 alert('Enter link');
+                toast.error('Link not found' + 'enter link');
                 setLoading(false)
                 return
             }
+            const loadSongFromApiToast = toast.loading('Loading song info from api ....')
             const result = await fetch(`https://api-codershubinc.vercel.app/v1.0/saavnCDN?link=${link}`)
             const dataJs = await result.json()
             console.log(dataJs.data.data[0])
             const data = dataJs.data.data[0]
             if (!data.downloadUrl.find((item: any) => item.quality === "320kbps")?.url) {
                 console.log('Link not found' + 'enter link');
-
-
-
+                toast.error('Song data not found from api', { id: loadSongFromApiToast });
+                setLoading(false)
+                return
             }
+            toast.dismiss(loadSongFromApiToast)
+
             const musicDataFromApi = {
                 musicName: data.name,
                 musicId: data.musicId || '',
@@ -56,10 +66,12 @@ function Page() {
             if (!musicDataFromApi.musicUri) {
                 console.log('music Link not found' + 'enter link');
                 alert('Something went wrong');
+                toast.error('Error on uploading music config ...')
                 setLoading(false)
                 return
-
             }
+            uploadingMusicConfig = toast.loading('Uploading music config ....' + musicDataFromApi.musicName)
+            toast.success('Music added successfully :: ' + data?.name)
             console.log('musicDataFromApi', musicDataFromApi);
 
             const uplMusic = await uploadMusicToDb(musicDataFromApi)
@@ -67,6 +79,7 @@ function Page() {
             if (!uplMusic) {
                 console.log('uplMusic problem' + 'enter link');
                 alert('Something went wrong');
+                toast.error('Error on uploading music config ...')
                 setLoading(false)
                 return
             }
@@ -85,54 +98,59 @@ function Page() {
                 playListId: musicPlayListId,
                 musicId: uplMusic.$id
             }
-
-
+            toast.dismiss(uploadingMusicConfig)
             addMusicToPlayList(aTpl)
 
         } catch (error) {
             console.log('error', error);
+            toast.dismiss(uploadingMusicConfig)
+            toast.error('Something went wrong',)
             setLoading(false)
-        } finally {
-
         }
     }
     const addMusicToPlayList = async (data: any) => {
+        const loadingToast = toast.loading('adding to playlist ...')
         console.log('now adding to playlist');
-
         setLoading(true)
         console.log('data is', data);
 
 
         try {
+            // =======> getting playlist && checking if playlist exist
             const result = await musicPlayList.getMusicPlayListOne(data.playListId);
-
             const id = data.playListId;
-            if (result) {
-                console.log(result);
-                console.log(result.musicContains);
-                const musicContains = [...result.musicContains, data.musicId];
-                try {
-                    const result = await musicPlayList.updateMusicPlayList({ id, musicContains });
-                    console.log('addMusicToPlayList:', result);
-                    setLoading(false);
-                } catch (error) {
-                    console.log(error);
-                    setLoading(false);
-                }
+            if (!result) {
+                console.log('result not found');
+                setLoading(false);
+                toast.error(`Playlist with id ${id}  not found `, { id: loadingToast })
+                return
             }
+            console.log(result);
+            console.log(result.musicContains);
+            const musicContains = [...result.musicContains, data.musicId];
+            // =====> uploading id of music to playlist
+            const uploadedPlaylistConfig = await musicPlayList.updateMusicPlayList({ id, musicContains });
+            console.log('addMusicToPlayList:', uploadedPlaylistConfig);
+            setLoading(false);
+
+
         } catch (error) {
             console.log('Error:', error);
-
+            setLoading(false);
+            navigate.push(`/upload/music/chose-playlist-for-music?musicId=${data?.musicId}&playListId=${data?.PlayListId}`);
         }
+        toast.dismiss(loadingToast)
     };
 
     useEffect(() => {
         if (currentUser?.labels) {
             if (currentUser.labels.includes('admin')) {
                 setIsAdmin(true);
+                setLoading(false);
+            } else {
+                setLoading(false)
             }
         }
-        setLoading(false);
     }, [currentUser]);
 
     if (loading) {
@@ -152,8 +170,13 @@ function Page() {
 
 
     return (
-        <PageUi>
-            <form onSubmit={handleSubmit(upl)}  >
+        <PageUi
+            className='flex flex-col justify-evenly items-center w-full max-h-fit '
+        >
+            <form
+                onSubmit={handleSubmit(upl)}
+                className='w-full flex flex-col justify-center items-center gap-4'
+            >
                 <Input
                     type="text"
                     id="music_URI"

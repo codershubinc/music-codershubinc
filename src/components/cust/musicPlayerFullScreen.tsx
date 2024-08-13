@@ -2,8 +2,13 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '../ui/button'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
-import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
+import { ListPlusIcon, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 import { inf } from '@/utils/saavnApis/getSongInfo.api';
+import authService from '@/config/auth/auth';
+import dbConfig from '@/config/dataBase/userPrefs/UserDBConfig';
+import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser';
+import toast, { Toast } from 'react-hot-toast'
+import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser';
 type SongInfo = {
     $id: string;
     musicName: string;
@@ -43,14 +48,17 @@ function MusicPlayerFull(
     }: MusicPlayerProps
 ) {
 
+    const [user, setUser] = useState<any>()
+    const [createPlaylist, setCreatePlaylist] = useState(false)
     const [fetchedSongInfo, setFetchedSongInfo] = useState<any>()
+    const [playlistContent, setPlaylistContent] = useState<any>()
 
     useEffect(() => {
 
         async function f(url: string) {
             console.log('currentSongInfo.url', currentSongInfo.url);
             let res = await inf(url)
-            console.log('fetched song info', res?.data?.data[0] );
+            console.log('fetched song info', res?.data?.data[0]);
             setFetchedSongInfo(res?.data?.data[0] || [])
 
         }
@@ -60,8 +68,72 @@ function MusicPlayerFull(
             f(currentSongInfo.url)
         }
         console.log('no song url found', currentSongInfo?.url);
-        
+        if (!user) {
+            getUser()
+        }
+
     }, [currentSongInfo])
+
+    const getUser = async () => {
+        const result = await authService.getCurrentUser()
+
+        if (result.$id) {
+            console.log('fond a user ', result);
+            const userPrefs = await dbConfig.getDocument(result.$id)
+            if (userPrefs) {
+                console.log('got a user prefs', userPrefs);
+                setUser(userPrefs)
+                if (!userPrefs?.createdPlayLists[0]) return
+                console.log('id = ', userPrefs?.createdPlayLists[0]);
+
+                const pl = await musicPlayListByUser.getMusicPlayListByUser(userPrefs?.createdPlayLists[0])
+
+                if (pl) {
+                    console.log('got a playlist info', pl);
+
+                    setPlaylistContent(pl)
+                }
+
+            }
+        }
+    }
+
+
+    const playlistController = async () => {
+        if (playlistContent) {
+            const loadingToast = toast.loading('adding to playlist ...')
+            const containsSongs = playlistContent?.musicContains
+            if (containsSongs?.includes(currentSongInfo.$id)) {
+                toast.error('Song is already in playlist.........')
+                toast.dismiss(loadingToast)
+                return
+            }
+            try {
+                const result = await musicPlayListByUser.updateMusicPlayListByUser({
+                    id: playlistContent.$id,
+                    prefs: [...playlistContent.musicContains, currentSongInfo.$id]
+                })
+                console.log('added to playlist ', result);
+                setPlaylistContent(result)
+                toast.dismiss(loadingToast)
+                toast.success('added to playlist')
+
+
+            } catch (error: any) {
+                console.log('failed to add playlist', error);
+                toast.dismiss(loadingToast)
+                toast.error('failed to add playlist')
+            }
+
+
+        } else {
+            console.log('no playlist found');
+            toast('no playlist found')
+            setCreatePlaylist(true)
+        }
+
+    }
+
 
 
     return (
@@ -118,6 +190,32 @@ function MusicPlayerFull(
                 />
 
                 {/* ====> bottom controllers */}
+                <div
+                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
+                >
+                    {user  ?
+
+                        <Button
+                            type='button'
+                            variant={'ghost'}
+                            onClick={() => playlistController()}
+                        >
+                            {user?.createdPlayLists[0] ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
+                        </Button>
+                        :
+                        <p>
+                            Loading .....
+                        </p>
+                    }
+                    {createPlaylist &&
+                        <CreatePlaylistByUser
+                            isDisplay={true}
+                            setCreatePlaylist={setCreatePlaylist}
+                            setUser={setUser}
+                        />
+
+                    }
+                </div>
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >

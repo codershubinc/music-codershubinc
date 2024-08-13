@@ -1,6 +1,8 @@
 import musicConfig from "@/config/dataBase/playListsDb/musicConfig";
+import toast from "react-hot-toast";
 
 const uploadMusicToDb = async (data: any) => {
+
     const result = await musicConfig.createMusicConfig({
         musicName: data.musicName,
         musicId: data.musicId || '',
@@ -16,6 +18,7 @@ const uploadMusicToDb = async (data: any) => {
         year: data.year,
         url: data.url
     })
+    toast.success('Music added successfully :: ' + data?.musicName)
 
     return result
 }
