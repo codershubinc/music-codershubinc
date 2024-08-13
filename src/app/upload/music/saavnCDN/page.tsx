@@ -89,7 +89,7 @@ function Page() {
                 setLoading(false)
                 return
             }
-            console.log('uploded music uri', uplMusic.musicUri);
+            console.log('uploaded music uri', uplMusic.musicUri);
 
             console.log('music uploaded ', uplMusic);
             // navigate.push(`/upload/music/chose-playlist-for-music?musicId=${uplMusic.$id}&playListId=${musicPlayListId}`)
