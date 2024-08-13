@@ -193,18 +193,21 @@ function MusicPlayerFull(
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
-                    {user  ?
+                    {user && currentSongInfo ?
 
-                        <Button
-                            type='button'
-                            variant={'ghost'}
-                            onClick={() => playlistController()}
-                        >
-                            {user?.createdPlayLists[0] ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
-                        </Button>
+                        <div>
+                            <Button
+                                type='button'
+                                variant={'ghost'}
+                                onClick={() => playlistController()}
+                            >
+                                {user?.createdPlayLists[0] ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
+                            </Button>
+                            <p className='text-sm text-slate-700' >add to pl</p>
+                        </div>
                         :
                         <p>
-                            Loading .....
+                            {currentSongInfo ? 'Loading .....' : 'Play the song to get options ....'}
                         </p>
                     }
                     {createPlaylist &&
