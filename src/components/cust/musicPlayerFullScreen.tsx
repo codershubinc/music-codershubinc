@@ -49,6 +49,7 @@ function MusicPlayerFull(
 ) {
 
     const [user, setUser] = useState<any>()
+    const [currentUser, setCurrentUser] = useState<any>()
     const [createPlaylist, setCreatePlaylist] = useState(false)
     const [fetchedSongInfo, setFetchedSongInfo] = useState<any>()
     const [playlistContent, setPlaylistContent] = useState<any>()
@@ -76,7 +77,7 @@ function MusicPlayerFull(
 
     const getUser = async () => {
         const result = await authService.getCurrentUser()
-
+        setCurrentUser(result)
         if (result.$id) {
             console.log('fond a user ', result);
             const userPrefs = await dbConfig.getDocument(result.$id)
@@ -145,11 +146,11 @@ function MusicPlayerFull(
             }
         >
             <Button
-                className='absolute top-0 right-0 rotate-180'
+                className='absolute top-0 right-0 rotate-180 md:right-3 lg:right-4 '
                 onClick={() => setIsDisplay(false)}
             >^</Button>
             <div
-                className='mt-9 mx-auto text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-max lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
+                className='mt-9 mx-auto text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:min-w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
             >
                 <div
                     className='min-h-32 flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
@@ -193,21 +194,27 @@ function MusicPlayerFull(
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
-                    {user && currentSongInfo ?
+                    {currentUser && currentSongInfo ?
 
-                        <div>
-                            <Button
-                                type='button'
-                                variant={'ghost'}
-                                onClick={() => playlistController()}
-                            >
-                                {user?.createdPlayLists[0] ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
-                            </Button>
-                            <p className='text-sm text-slate-700' >add to pl</p>
-                        </div>
-                        :
+                        (
+                            currentUser?.labels?.includes('admin') ?
+                                <div>
+                                    <Button
+                                        type='button'
+                                        variant={'ghost'}
+                                        onClick={() => playlistController()}
+                                    >
+                                        {user?.createdPlayLists[0] ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
+                                    </Button>
+                                    <p className='text-sm text-slate-700' >add to pl</p>
+                                </div>
+                                :
+                                <p>
+                                    {currentSongInfo ? 'Loading .....' : 'Play the song to get options ....'}
+                                </p>
+                        ) :
                         <p>
-                            {currentSongInfo ? 'Loading .....' : 'Play the song to get options ....'}
+                            {currentSongInfo&&currentUser ? 'This feature is available for admin only ...' : 'Play the song to get options ....'}
                         </p>
                     }
                     {createPlaylist &&
@@ -253,13 +260,13 @@ function MusicPlayerFull(
             </div>
 
 
+            {/* music playList songs container */}
             <div className=' lg:flex my-auto mt-3  h-[100%] w-fit  justify-around items-center   hidden  '>
                 <div
                     className='flex'
                 >
-                    {/* music playList songs container */}
                     <div
-                        className="flex flex-col w-max lg:w-fit md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
+                        className="flex flex-col w-max lg:w-[40%] md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
                     >
                         {allMusicInfo.map((music: any) => (
 
