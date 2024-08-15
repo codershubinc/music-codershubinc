@@ -14,7 +14,7 @@ interface Playlists {
     // Add more properties here
 }
 
-function ViewAllPlayListsPage() {
+function ViewAllPlayListsPage({ allPlayLists }: { allPlayLists: any }) {
     const [playLists, setPlayLists] = useState<Playlists[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,6 @@ function ViewAllPlayListsPage() {
     const findAllPlayLists = async () => {
 
         try {
-            const allPlayLists = await musicPlayList.getMusicPlayListAllWoQuery();
             if (allPlayLists.documents) {
                 setPlayLists(allPlayLists.documents);
             } else {
@@ -38,7 +37,9 @@ function ViewAllPlayListsPage() {
     };
 
     useEffect(() => {
-        findAllPlayLists();
+        if (allPlayLists) {
+            findAllPlayLists();
+        }
     }, []);
 
 
@@ -48,6 +49,7 @@ function ViewAllPlayListsPage() {
             loading={loading}
             error={error}
             isUserLogin={isUserLogin}
+            playLink=''
         />
     );
 }

@@ -29,7 +29,7 @@ function IndexPlayList(
         loading: boolean,
         error: string | null,
         isUserLogin: boolean,
-        playLink?: string
+        playLink: string
     }
 ) {
 
@@ -67,7 +67,7 @@ function IndexPlayList(
                                 (
 
                                     <div className="grid grid-cols-1 sm:grid-cols-2 sm:w-max lg:grid-cols-3 lg:w-max w-full m-auto gap-4">
-                                        {playLists.map((playlist) => (
+                                        {playLists?.map((playlist) => (
                                             <Link
                                                 href={`/play${playLink && `/${playLink}`}?id=${cryptoUtil.encryptString(playlist.$id)}`}
                                                 key={playlist.$id}>

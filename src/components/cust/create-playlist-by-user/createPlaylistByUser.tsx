@@ -6,13 +6,26 @@ import { Button } from '../../ui/button'
 import tost from 'react-hot-toast'
 import { Input } from '../../ui/input'
 
-function CreatePlaylistByUser({ isDisplay, setCreatePlaylist, setUser }: { isDisplay: boolean, setCreatePlaylist: any, setUser: any }) {
-    const { currentUser } = useAuth()
+function CreatePlaylistByUser(
+    {
+        isDisplay,
+        setCreatedPlayList,
+        setCreatePlaylist,
+        setUser
+    }: {
+        isDisplay: boolean,
+        setCreatedPlayList?: any,
+        setCreatePlaylist?: any,
+        setUser?: any
+    }
+) {
+    const { currentUser, userPrefs } = useAuth()
     const [nameForPlayList, setNameForPlayList] = useState<string>('')
 
+
     const createPlaylist = async () => {
+        const loadingToast = tost.loading('creating a playlist ...')
         try {
-            const loadingToast = tost.loading('creating a playlist ...')
 
             const result = await musicPlayListByUser.createMusicPlayListByUser(
                 {
@@ -34,10 +47,12 @@ function CreatePlaylistByUser({ isDisplay, setCreatePlaylist, setUser }: { isDis
 
 
             if (result) {
+
                 const user = await dbConfig.updatePlaylistByUser(
                     currentUser.$id,
                     {
-                        createdPlayLists: [result.$id]
+
+                        createdPlayLists: [result.$id, ...userPrefs?.createdPlayLists]
                     }
                 )
                 console.log('user', user);
@@ -45,7 +60,12 @@ function CreatePlaylistByUser({ isDisplay, setCreatePlaylist, setUser }: { isDis
                     console.log('got a user', user);
                     isDisplay = false
                     setCreatePlaylist(false)
-                    setUser(user)
+                    if (setUser) {
+                        setUser(user)
+                    }
+                    if (setCreatePlaylist) {
+                        setCreatedPlayList(result)
+                    }
                     tost.dismiss(loadingToast)
                     tost.success('Playlist created successfully')
                     tost('Now you can add songs to a playlist ... ')
@@ -54,7 +74,7 @@ function CreatePlaylistByUser({ isDisplay, setCreatePlaylist, setUser }: { isDis
             }
         } catch (error: any) {
             console.log('error', error);
-            tost.error('Something went wrong')
+            tost.error('Something went wrong', { id: loadingToast })
         }
     }
 

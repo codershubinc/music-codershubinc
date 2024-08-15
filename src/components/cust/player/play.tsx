@@ -108,6 +108,7 @@ function Play({ playList }: { playList: any }) {
                         musicIds={musicIds}
                         playMusicWithId={id}
                         allMusicInfo={musicDetails}
+                        playListId={playList.$id}
                     />
                 </div>
             )

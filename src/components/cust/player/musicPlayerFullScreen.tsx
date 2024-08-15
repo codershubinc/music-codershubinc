@@ -9,6 +9,8 @@ import dbConfig from '@/config/dataBase/userPrefs/UserDBConfig';
 import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser';
 import toast, { Toast } from 'react-hot-toast'
 import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser';
+import AddMusicToPlayList from '@/app/upload/music/chose-playlist-for-music/addMusicToPlayList';
+import AddToPlayList from '../userActions/addToPlayList';
 type SongInfo = {
     $id: string;
     musicName: string;
@@ -29,6 +31,7 @@ type MusicPlayerProps = {
     currentTime: number;
     seekFn: (event: React.ChangeEvent<HTMLInputElement>) => void;
     isPlaying: boolean;
+    playListId: string
 };
 
 function MusicPlayerFull(
@@ -44,96 +47,10 @@ function MusicPlayerFull(
         duration,
         currentTime,
         seekFn,
-        isPlaying
+        isPlaying,
+        playListId
     }: MusicPlayerProps
 ) {
-    // ===========> here user is the userPrefs sry for that
-    const [user, setUser] = useState<any>()
-    const [currentUser, setCurrentUser] = useState<any>()
-    const [createPlaylist, setCreatePlaylist] = useState(false)
-    const [fetchedSongInfo, setFetchedSongInfo] = useState<any>()
-    const [playlistContent, setPlaylistContent] = useState<any>()
-
-    useEffect(() => {
-
-        async function f(url: string) {
-            console.log('currentSongInfo.url', currentSongInfo.url);
-            let res = await inf(url)
-            console.log('fetched song info', res?.data?.data[0]);
-            setFetchedSongInfo(res?.data?.data[0] || [])
-
-        }
-
-
-        if (currentSongInfo?.url) {
-            f(currentSongInfo.url)
-        }
-        console.log('no song url found', currentSongInfo?.url);
-        if (!user) {
-            getUser()
-        }
-
-    }, [currentSongInfo])
-
-    const getUser = async () => {
-        const result = await authService.getCurrentUser()
-        setCurrentUser(result)
-        if (result.$id) {
-            console.log('fond a user ', result);
-            const userPrefs = await dbConfig.getDocument(result.$id)
-            if (userPrefs) {
-                console.log('got a user prefs', userPrefs);
-                setUser(userPrefs)
-                if (!userPrefs?.createdPlayLists[0]) return
-                console.log('id = ', userPrefs?.createdPlayLists[0]);
-
-                const pl = await musicPlayListByUser.getMusicPlayListByUser(userPrefs?.createdPlayLists[0])
-
-                if (pl) {
-                    console.log('got a playlist info', pl);
-
-                    setPlaylistContent(pl)
-                }
-
-            }
-        }
-    }
-
-
-    const playlistController = async () => {
-        if (playlistContent) {
-            const loadingToast = toast.loading('adding to playlist ...')
-            const containsSongs = playlistContent?.musicContains
-            if (containsSongs?.includes(currentSongInfo.$id)) {
-                toast.error('Song is already in playlist.........')
-                toast.dismiss(loadingToast)
-                return
-            }
-            try {
-                const result = await musicPlayListByUser.updateMusicPlayListByUser({
-                    id: playlistContent.$id,
-                    prefs: [...playlistContent.musicContains, currentSongInfo.$id]
-                })
-                console.log('added to playlist ', result);
-                setPlaylistContent(result)
-                toast.dismiss(loadingToast)
-                toast.success('added to playlist')
-
-
-            } catch (error: any) {
-                console.log('failed to add playlist', error);
-                toast.dismiss(loadingToast)
-                toast.error('failed to add playlist')
-            }
-
-
-        } else {
-            console.log('no playlist found');
-            toast('no playlist found')
-            setCreatePlaylist(true)
-        }
-
-    }
 
 
 
@@ -146,7 +63,7 @@ function MusicPlayerFull(
             }
         >
             <Button
-                className='absolute top-0 right-0 rotate-180 md:right-3 lg:right-4 '
+                className='text-3xl bg-slate-950 text-white absolute top-0 right-0 rotate-180 md:right-3 lg:right-4 '
                 onClick={() => setIsDisplay(false)}
             >^</Button>
             <div
@@ -194,38 +111,11 @@ function MusicPlayerFull(
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
-                    {currentUser && currentSongInfo && user ?
-
-                        (
-                            currentUser?.labels?.includes('admin') ?
-                                <div>
-                                    <Button
-                                        type='button'
-                                        variant={'ghost'}
-                                        onClick={() => playlistController()}
-                                    >
-                                        {user?.createdPlayLists[0] ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
-                                    </Button>
-                                    <p className='text-sm text-slate-700' >add to pl</p>
-                                </div>
-                                :
-                                <p>
-                                    {currentSongInfo ? 'Loading .....' : 'Play the song to get options ....'}
-                                </p>
-                        ) :
-                        <p>
-                            {currentSongInfo && currentUser ? 'This feature is available for admin only ...' : 'Play the song to get options ....'}
-                        </p>
-                    }
-                    {createPlaylist &&
-                        <CreatePlaylistByUser
-                            isDisplay={true}
-                            setCreatePlaylist={setCreatePlaylist}
-                            setUser={setUser}
-                        />
-
-                    }
-                </div>
+                    <AddToPlayList
+                        currentSongInfo={currentSongInfo}
+                        playListId={playListId}
+                    />
+                </div >
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
