@@ -2,9 +2,9 @@ import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUs
 import dbConfig from '@/config/dataBase/userPrefs/UserDBConfig'
 import { useAuth } from '@/context/AuthContext'
 import React, { useState } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 import tost from 'react-hot-toast'
-import { Input } from '../ui/input'
+import { Input } from '../../ui/input'
 
 function CreatePlaylistByUser({ isDisplay, setCreatePlaylist, setUser }: { isDisplay: boolean, setCreatePlaylist: any, setUser: any }) {
     const { currentUser } = useAuth()

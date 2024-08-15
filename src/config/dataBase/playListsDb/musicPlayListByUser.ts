@@ -1,4 +1,4 @@
-import { Client, ID, Databases, Storage } from "appwrite";
+import { Client, ID, Databases, Storage, Query } from "appwrite";
 import conf from "@/conf/conf"
 
 export class MusicPlayListByUser {
@@ -56,11 +56,17 @@ export class MusicPlayListByUser {
     async getMusicPlayListByUser(
         query: string
     ) {
-        return await this.databases.getDocument(
-            conf.appwriteDatabaseId,
-            conf.appwriteCollectionPlayListByUserId,
-            query
-        )
+        try {
+            return await this.databases.getDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionPlayListByUserId,
+                query
+            )
+        } catch (error: any) {
+            console.log('ERROR', error);
+            return {}
+
+        }
     }
     async updateMusicPlayListByUser({
         id,
@@ -75,6 +81,23 @@ export class MusicPlayListByUser {
             id,
             { musicContains: prefs }
         )
+    }
+
+    async getMusicPlayListsByUser(id: string) {
+        try {
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionPlayListByUserId,
+                [
+                    Query.equal('createdBy', id)
+                ]
+            )
+
+        } catch (error: any) {
+            console.log('Error:', error);
+
+            return null
+        }
     }
 }
 const musicPlayListByUser = new MusicPlayListByUser()

@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
 import { ListPlusIcon, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 import { inf } from '@/utils/saavnApis/getSongInfo.api';
@@ -47,7 +47,7 @@ function MusicPlayerFull(
         isPlaying
     }: MusicPlayerProps
 ) {
-
+    // ===========> here user is the userPrefs sry for that
     const [user, setUser] = useState<any>()
     const [currentUser, setCurrentUser] = useState<any>()
     const [createPlaylist, setCreatePlaylist] = useState(false)
@@ -153,7 +153,7 @@ function MusicPlayerFull(
                 className='mt-9 mx-auto text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:min-w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
             >
                 <div
-                    className='min-h-32 flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
+                    className='min-h-32 max-h-fit flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
                 >
                     <h1
                         className='ml-2 text-2xl'
@@ -214,7 +214,7 @@ function MusicPlayerFull(
                                 </p>
                         ) :
                         <p>
-                            {currentSongInfo&&currentUser ? 'This feature is available for admin only ...' : 'Play the song to get options ....'}
+                            {currentSongInfo && currentUser ? 'This feature is available for admin only ...' : 'Play the song to get options ....'}
                         </p>
                     }
                     {createPlaylist &&
@@ -306,5 +306,3 @@ function MusicPlayerFull(
 }
 
 export default MusicPlayerFull
-
-

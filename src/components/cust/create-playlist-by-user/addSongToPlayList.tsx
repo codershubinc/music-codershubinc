@@ -1,7 +1,7 @@
 'use client'
 import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser';
 import React from 'react'
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button'
 
 function AddSongToPlayList(id: string, show: boolean, playListId: string) {
 
