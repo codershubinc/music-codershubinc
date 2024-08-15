@@ -2,9 +2,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import music from '@/config/dataBase/playListsDb/music';
 import { useRouter } from 'next/navigation';
-import MediaSessionFunc from '../../utils/musicControllers/mediaSession';
-import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from '../../utils/musicControllers/playControllers';
-import MusicPlayerFull from '@/components/cust/musicPlayerFullScreen';
+import MediaSessionFunc from '../../../utils/musicControllers/mediaSession';
+import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from '../../../utils/musicControllers/playControllers';
+import MusicPlayerFull from './musicPlayerFullScreen';
 import { Button } from '@/components/ui/button';
 import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 interface Props {
