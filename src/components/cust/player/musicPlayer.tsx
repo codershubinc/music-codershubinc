@@ -11,9 +11,10 @@ interface Props {
     musicIds: string[];
     playMusicWithId: string;
     allMusicInfo: any;
+    playListId: string
 }
 
-const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo }) => {
+const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo, playListId }) => {
     const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1);
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
@@ -70,7 +71,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
         pauseAudio(audioRef, setIsPlaying);
         const audio = audioRef.current;
 
-        if (audio) {
+        if (audio?.duration) {
             audio.currentTime = audio.duration;
             setCurrentTime(audio.duration);
         }
@@ -122,6 +123,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo 
                 duration={duration}
                 currentTime={currentTime}
                 isPlaying={isPlaying}
+                playListId={playListId}
             />
         ) : (
             <div className="w-[97%] mx-auto fixed bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2">

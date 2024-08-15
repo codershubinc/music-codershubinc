@@ -2,19 +2,109 @@
 
 import PageUi from "@/components/page/pageui";
 import ViewAllPlayListsPage from "@/components/cust/playLists/viewAllPlayListsPage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import YourPl from "@/components/cust/playLists/yourPL";
 import { useAuth } from "@/context/AuthContext";
+import musicPlayList from "@/config/dataBase/playListsDb/musicPlayList";
+import musicPlayListByUser from "@/config/dataBase/playListsDb/musicPlayListByUser";
+import LOCAL from "@/utils/func/localStorage";
 
 export default function Home() {
 
-  const [whichPlayLists, setWhichPlayLists] = useState<string>('all');
+  const [whichPlayLists, setWhichPlayLists] = useState<string>();
   const { currentUser } = useAuth()
+  const [you, setYpu] = useState<any>()
+  const [all, setAll] = useState<any>()
+  const [fav, setFav] = useState<any>()
+  const [loading, setLoading] = useState(true)
 
+
+  const fetchPlayLists = async () => {
+    console.log('fetching play list user === ', currentUser);
+    setLoading(true)
+    try {
+      if (whichPlayLists === 'all') {
+        LOCAL.set('whichPlayLists', 'all')
+        if (all?.documents) return
+        const allPlayLists = await musicPlayList.getMusicPlayListAllWoQuery()
+        if (allPlayLists?.documents) {
+          console.log('got playlist infos', allPlayLists);
+
+          return setAll(allPlayLists)
+        }
+      }
+
+      if (whichPlayLists === 'you') {
+        LOCAL.set('whichPlayLists', 'you')
+        if (you?.documents) return
+        const youPlayLists = await musicPlayListByUser.getMusicPlayListsByUser(currentUser?.$id)
+        if (youPlayLists?.documents) {
+          console.log('got playlist infos', youPlayLists);
+
+          return setYpu(youPlayLists)
+        }
+      }
+
+      if (whichPlayLists === 'fav') {
+        //  TODO : implement fav
+        return
+      }
+    } catch (error: any) {
+      console.log('ERROR AT HOME PAGE', error);
+      setLoading(false)
+    } finally {
+      console.log('finally');
+      setLoading(false)
+    }
+  }
+
+
+  useEffect(() => {
+    if (currentUser?.$id) {
+      console.log('witchPlaylist', whichPlayLists);
+      console.log('user ', currentUser);
+      fetchPlayLists()
+    }
+  }, [whichPlayLists, currentUser])
+
+
+  useEffect(() => {
+    let atLocal = LOCAL.get('whichPlayLists')
+    if (atLocal) {
+      console.log('at local ', atLocal);
+
+      setWhichPlayLists(atLocal)
+    } else {
+      setWhichPlayLists('all')
+    }
+  }, [])
+
+  const refreshCurrentPlaylists = () => {
+    if (whichPlayLists === 'all') {
+      setAll(null)
+      return fetchPlayLists()
+    }
+
+    if (whichPlayLists === 'you') {
+      setYpu(null)
+      return fetchPlayLists()
+    }
+
+    if (whichPlayLists === 'fav') {
+      return
+    }
+  }
 
   return (
     <PageUi>
+      <Button
+        onClick={() => refreshCurrentPlaylists()}
+        variant={"ghost"}
+        className="w-auto absolute  right-0 top-{} "
+      >
+        Refresh
+      </Button>
 
       <div>
         <Button
@@ -49,13 +139,24 @@ export default function Home() {
         }
       </div>
       {
-        whichPlayLists === 'all' && <ViewAllPlayListsPage />
-      }
-      {
-        whichPlayLists === 'you' && <YourPl />
-      }
+        loading ?
+          <><p>Loading .....</p></>
+          :
+          (
+            <div>
+              {
+                all && whichPlayLists === 'all' && <ViewAllPlayListsPage allPlayLists={all} />
+              }
+              {
+                you && whichPlayLists === 'you' && <YourPl allPlayLists={you} user={currentUser} />
+              }
+              {
+                whichPlayLists === 'fav' && <><p className="text-red-500 font-bold text-2xl " >We are adding it soon thank you </p></>
+              }
+            </div>
+          )
 
-
+      }
     </PageUi>
 
   );

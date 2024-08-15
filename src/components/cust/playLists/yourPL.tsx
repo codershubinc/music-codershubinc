@@ -3,20 +3,25 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import IndexPlayList from './index.playlist';
-import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser';
+import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser';
+import { Button } from '@/components/ui/button';
 
-function YourPl() {
+
+
+function YourPl({ allPlayLists, user }: { allPlayLists: any, user: any }) {
+    const [createNew, setCreatePlaylist] = useState(false);
     const [playLists, setPlayLists] = useState<any>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { isUserLogin, currentUser } = useAuth()
+    const { isUserLogin } = useAuth()
+
+    const [newPlayLists, setNewPlaylists] = useState<any>();
 
     const findAllPlayLists = async () => {
 
         try {
-            const allPlayLists = await musicPlayListByUser.getMusicPlayListsByUser(currentUser?.$id);
-            if (allPlayLists?.documents) {
-                setPlayLists(allPlayLists?.documents);
+            if (allPlayLists.documents) {
+                setPlayLists(allPlayLists.documents);
             } else {
                 setPlayLists([]);
             }
@@ -29,22 +34,58 @@ function YourPl() {
     };
 
     useEffect(() => {
-        if (currentUser) {
-            console.log('id', currentUser?.$id);
-
+        if (allPlayLists) {
             findAllPlayLists();
         }
     }, []);
 
+    useEffect(() => {
+        if (newPlayLists?.$id) {
+            console.log('new pl = ', newPlayLists);
+
+
+            setPlayLists((prevState: any) => {
+                let doc = newPlayLists
+                console.log('doc', doc);
+
+
+                return [
+                    ...prevState,
+                    newPlayLists,
+                ]
+            });
+        }
+        setCreatePlaylist(false);
+    }, [newPlayLists]);
+    console.log('playlists = ', playLists);
+
+
 
     return (
-        <IndexPlayList
-            playLists={playLists}
-            loading={loading}
-            error={error}
-            isUserLogin={isUserLogin}
-            playLink='y'
-        />
+        <>
+            <Button
+                onClick={() => setCreatePlaylist(true)}
+                variant="outline"
+                className="w-full"
+            >
+                Create New Playlist
+            </Button>
+            <IndexPlayList
+                playLists={playLists}
+                loading={loading}
+                error={error}
+                isUserLogin={isUserLogin}
+                playLink='y'
+            />
+            {
+                createNew &&
+                <CreatePlaylistByUser
+                    isDisplay={true}
+                    setCreatePlaylist={setCreatePlaylist}
+                    setCreatedPlayList={setNewPlaylists}
+                />
+            }
+        </>
     );
 }
 
