@@ -51,15 +51,14 @@ export default function RootLayout({
   return (
     <html lang="en">
 
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="google-adsense-account" content="ca-pub-1775178587078079" />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1775178587078079"
-          crossOrigin="anonymous"
-        ></script>
-      </Head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="google-adsense-account" content="ca-pub-1775178587078079" />
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1775178587078079"
+        crossOrigin="anonymous"
+      ></script>
+
       <AuthProvider>
         <body className={`${inter.className}  bg-black `}>
 
