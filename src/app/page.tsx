@@ -143,17 +143,31 @@ export default function Home() {
           <><p>Loading .....</p></>
           :
           (
-            <div>
-              {
-                all && whichPlayLists === 'all' && <ViewAllPlayListsPage allPlayLists={all} />
-              }
-              {
-                you && whichPlayLists === 'you' && <YourPl allPlayLists={you} user={currentUser} />
-              }
-              {
-                whichPlayLists === 'fav' && <><p className="text-red-500 font-bold text-2xl " >We are adding it soon thank you </p></>
-              }
-            </div>
+            <>
+              <div>
+                {
+                  all && whichPlayLists === 'all' && <ViewAllPlayListsPage allPlayLists={all} />
+                }
+                {
+                  you && whichPlayLists === 'you' && <YourPl allPlayLists={you} user={currentUser} />
+                }
+                {
+                  whichPlayLists === 'fav' && <><p className="text-red-500 font-bold text-2xl " >We are adding it soon thank you </p></>
+                }
+              </div>
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1775178587078079"
+                crossOrigin="anonymous"></script>
+              {/* <!-- custHorizontalAds --> */}
+              <ins
+                className="block adsbygoogle"
+                data-ad-client="ca-pub-1775178587078079"
+                data-ad-slot="2075762019"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+              <script>
+                (adsbygoogle = window.adsbygoogle || []).push({ });
+              </script>
+            </>
           )
 
       }
