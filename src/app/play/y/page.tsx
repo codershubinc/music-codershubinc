@@ -5,10 +5,11 @@ import Play from '@/components/cust/player/play';
 import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser';
 import cryptoUtil from '@/lib/util/CryptoUtil';
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 
 function Page() {
     const [currentMusicPlaylist, setCurrentMusicPlaylist] = useState<any>()
-
+    const [error, setError] = useState('')
 
 
     useEffect(() => {
@@ -20,9 +21,9 @@ function Page() {
                 const playlist = await musicPlayListByUser.getMusicPlayListByUser(id)
                 setCurrentMusicPlaylist(playlist);
             } catch (error: any) {
-                console.log('ERROR', error);
-
-
+                console.log('Error while feting playlist :: ', error);
+                toast.error('Error while feting playlist :: ', error?.message)
+                setError(error?.message || 'Something went wrong');
             }
         }
 
@@ -33,6 +34,13 @@ function Page() {
 
 
     }, [])
+
+    if (error) {
+        return (
+            <p className='text-red-500 text-2xl' >{error}</p>
+        )
+
+    }
 
     return (
         <Play

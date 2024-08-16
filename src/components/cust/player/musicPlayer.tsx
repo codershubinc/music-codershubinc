@@ -11,7 +11,7 @@ interface Props {
     musicIds: string[];
     playMusicWithId: string;
     allMusicInfo: any;
-    playListId: string
+    playListId: string;
 }
 
 const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo, playListId }) => {
