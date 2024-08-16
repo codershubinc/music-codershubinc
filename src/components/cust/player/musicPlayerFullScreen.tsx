@@ -82,7 +82,7 @@ function MusicPlayerFull(
                 </div>
                 {/* ====> music avatar && input type range */}
                 <div
-                    className='w-auto min-h-[500px] md:h-auto lg:h-auto '
+                    className='h-max   md:h-auto lg:h-auto '
                 >
                     <img
                         src={
@@ -95,59 +95,55 @@ function MusicPlayerFull(
                     />
 
                 </div>
-                <input
-                    type="range"
-                    min="0"
-                    max={duration}
-                    value={currentTime}
-                    onChange={(event) => seekFn(event)}
-                    style={{ width: '100%', animation: 'ease-in-out', }}
-                    className='w-full accent-slate-600 transition-transform'
+                {/* buttons */}
+                <div
+                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
+                >
+
+                    <div className='ml-1 w-[65%] overflow-hidden h-12 '>
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
+                    </div>
+                    <div
+                        className='w-[30%]'
+                    >
+                        {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
+                        {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+                    </div>
+                    <hr className='w-[95%]' />
+                    <input
+                        type="range"
+                        min="0"
+                        max={duration}
+                        value={currentTime}
+                        onChange={(event) => seekFn(event)}
+                        style={{ width: '100%', animation: 'ease-in-out', }}
+                        className='w-full accent-slate-600 transition-transform'
+                    />
+                    {/* buttons */}
+                    <div className="flex w-full mt-3 mb-2 justify-around">
+                        <button onClick={prevFn}>
+                            <SkipBack className="w-6 h-6 text-blue-500" />
+                        </button>
+                        <button onClick={plPaFn}>
+                            {isPlaying ? (
+                                <Pause className="w-6 h-6 text-blue-500" />
+                            ) : (
+                                <Play
+                                    className="w-6 h-6  text-slate-600"
+                                />
+                            )}
+                        </button>
+                        <button onClick={nextFn}>
+                            <SkipForward className="w-6 h-6 text-blue-500" />
+                        </button>
+                    </div>
+                </div>
+                <AddToPlayList
+                    currentSongInfo={currentSongInfo}
+                    playListId={playListId}
                 />
 
 
-                {/* ====> bottom controllers */}
-                <div
-                    className='w-full h-[40%] md:h-auto lg:h-auto flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
-                >
-                    <AddToPlayList
-                        currentSongInfo={currentSongInfo}
-                        playListId={playListId}
-                    />
-                    {/* buttons */}
-                    <div
-                        className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
-                    >
-
-                        <div className='ml-1 w-[65%] overflow-hidden h-12 '>
-                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
-                        </div>
-                        <div
-                            className='w-[30%]'
-                        >
-                            {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
-                            {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
-                        </div>
-                        <hr className='w-[95%]' />
-                        <div className="flex w-full mt-3 mb-2 justify-around">
-                            <button onClick={prevFn}>
-                                <SkipBack className="w-6 h-6 text-blue-500" />
-                            </button>
-                            <button onClick={plPaFn}>
-                                {isPlaying ? (
-                                    <Pause className="w-6 h-6 text-blue-500" />
-                                ) : (
-                                    <Play
-                                        className="w-6 h-6  text-slate-600"
-                                    />
-                                )}
-                            </button>
-                            <button onClick={nextFn}>
-                                <SkipForward className="w-6 h-6 text-blue-500" />
-                            </button>
-                        </div>
-                    </div>
-                </div >
             </div>
 
 
