@@ -5,8 +5,14 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Navbar from '@/components/navbar/Navbar'
 import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
+import Head from "next/head";
+
 
 const inter = Inter({ subsets: ["latin"] });
+
+
+
+
 
 export const metadata: Metadata = {
   title: "Music Hub ",
@@ -41,12 +47,19 @@ export default function RootLayout({
 
   console.log('children:')
 
+
   return (
     <html lang="en">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <meta name="google-adsense-account" content="ca-pub-1775178587078079" />
 
-
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="google-adsense-account" content="ca-pub-1775178587078079" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1775178587078079"
+          crossOrigin="anonymous"
+        ></script>
+      </Head>
       <AuthProvider>
         <body className={`${inter.className}  bg-black `}>
 
