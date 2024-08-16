@@ -5,19 +5,26 @@ import Play from '@/components/cust/player/play';
 import musicPlayList from '@/config/dataBase/playListsDb/musicPlayList';
 import cryptoUtil from '@/lib/util/CryptoUtil';
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 
 function Page() {
     const [currentMusicPlaylist, setCurrentMusicPlaylist] = useState()
-
+    const [error, setError] = useState('')
 
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const encryptedId = params.get('id');
         async function getPlDet(id: string) {
-            console.log('Fetching playlist with ID:', id);
-            const playlist = await musicPlayList.getMusicPlayListOne(id)
-            setCurrentMusicPlaylist(playlist);
+            try {
+                console.log('Fetching playlist with ID:', id);
+                const playlist = await musicPlayList.getMusicPlayListOne(id)
+                setCurrentMusicPlaylist(playlist);
+            } catch (error: any) {
+                console.log('Error while feting playlist :: ', error);
+                toast.error('Error while feting playlist :: ', error?.message)
+                setError(error?.message || 'Something went wrong');
+            }
         }
 
         if (encryptedId) {
@@ -27,6 +34,13 @@ function Page() {
 
 
     }, [])
+
+    if (error) {
+        return (
+            <p className='text-red-500 text-2xl' >{error}</p>
+        )
+
+    }
 
     return (
         <Play

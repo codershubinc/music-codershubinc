@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser'
 import LOCAL from '@/utils/func/localStorage'
+import DecodeHTMLEntities from '@/utils/func/htmlDecode'
 
 function AddToPlayList(
     {
@@ -40,6 +41,8 @@ function AddToPlayList(
 
 
         if (currentSongInfo?.url) {
+            console.log('current song info.name', currentSongInfo);
+
             f(currentSongInfo.url)
         }
         console.log('no song url found', currentSongInfo?.url);
@@ -84,7 +87,8 @@ function AddToPlayList(
         console.log('playlist id', id);
         LOCAL.set('lastAddedPlaylistId', id)
         console.log('all pl list => ', allPlayListsInfo?.documents?.length);
-
+        // storing ref for current song info 
+        const cSInfo = currentSongInfo
         if (allPlayListsInfo?.documents?.length > 0) {
             const loadingToast = toast.loading('adding to playlist ...')
             const containsSongs = allPlayListsInfo?.documents.map((music: any) => {
@@ -95,7 +99,7 @@ function AddToPlayList(
             console.log('contains songs', containsSongs[0]);
 
             if (containsSongs[0]?.musicContains?.includes(currentSongInfo.$id)) {
-                toast.error('Song is already in playlist...' + containsSongs[0]?.name, { id: loadingToast })
+                toast.error(DecodeHTMLEntities('Song &quot;' + (cSInfo?.musicName || '') + '&quot; is already in playlist...   ') + containsSongs[0]?.name, { id: loadingToast })
                 return
             }
             try {
@@ -117,7 +121,7 @@ function AddToPlayList(
                         documents: updatedDocuments,
                     };
                 });
-                toast.success('added to playlist ', { id: loadingToast })
+                toast.success(DecodeHTMLEntities('song &quot;' + (cSInfo?.musicName || '') + '&quot;  added to playlist '), { id: loadingToast })
 
 
             } catch (error: any) {
@@ -200,7 +204,7 @@ function AddToPlayList(
                                                     >
                                                         {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
                                                     </Button>
-                                                    <p className='text-sm text-slate-300' >add to <br />  <span className='text-blue-500' > {` ${LOCAL.get('lastAddedPlaylistId') ? getPlById(LOCAL.get('lastAddedPlaylistId'))?.name : allPlayListsInfo?.documents[0]?.name} `} </span> </p>
+                                                    <p className='text-sm text-slate-300' >add to <br />  <span className='text-blue-500' > {` ${LOCAL.get('lastAddedPlaylistId') ? getPlById(LOCAL.get('lastAddedPlaylistId'))?.name || 'playlist' : allPlayListsInfo?.documents[0]?.name} `} </span> </p>
                                                 </div>
                                             }
                                             {

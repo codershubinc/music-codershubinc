@@ -1,15 +1,8 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button } from '../../ui/button'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
-import { ListPlusIcon, Pause, Play, SkipBack, SkipForward } from 'lucide-react';
-import { inf } from '@/utils/saavnApis/getSongInfo.api';
-import authService from '@/config/auth/auth';
-import dbConfig from '@/config/dataBase/userPrefs/UserDBConfig';
-import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser';
-import toast, { Toast } from 'react-hot-toast'
-import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser';
-import AddMusicToPlayList from '@/app/upload/music/chose-playlist-for-music/addMusicToPlayList';
+import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 import AddToPlayList from '../userActions/addToPlayList';
 type SongInfo = {
     $id: string;
@@ -31,7 +24,7 @@ type MusicPlayerProps = {
     currentTime: number;
     seekFn: (event: React.ChangeEvent<HTMLInputElement>) => void;
     isPlaying: boolean;
-    playListId: string
+    playListId: string;
 };
 
 function MusicPlayerFull(
@@ -48,7 +41,7 @@ function MusicPlayerFull(
         currentTime,
         seekFn,
         isPlaying,
-        playListId
+        playListId,
     }: MusicPlayerProps
 ) {
 
@@ -59,18 +52,19 @@ function MusicPlayerFull(
 
         <div
             className={
-                `  h-max-[99vh] w-[100vw] m-0  top-0 left-0 right-0 bottom-0 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row lg:justify-evenly md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
+                `  max-h-screen h-screen w-[100vw] m-0  top-0 left-0 right-0 bottom-2 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row overscroll-y-contain lg:justify-between md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
             }
         >
             <Button
-                className='text-3xl bg-slate-950 text-white absolute top-0 right-0 rotate-180 md:right-3 lg:right-4 '
+                className='text-3xl bg-slate-950 text-white fixed top-0 right-0 rotate-180 md:right-3 lg:right-4 '
                 onClick={() => setIsDisplay(false)}
             >^</Button>
+            {/* music info && music player */}
             <div
-                className='mt-9 mx-auto text-left flex justify-evenly flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:min-w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
+                className='mx-auto h-screen text-left flex justify-between flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
             >
                 <div
-                    className='min-h-32 max-h-fit flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
+                    className='min-h-32 max-h-fit  md:h-auto lg:h-auto  flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
                 >
                     <h1
                         className='ml-2 text-2xl'
@@ -86,17 +80,21 @@ function MusicPlayerFull(
                         {DecodeHTMLEntities(currentSongInfo?.singer.map((singer: string) => singer.trim()).join(' , ') || 'singers ....')}
                     </p>
                 </div>
+                {/* ====> music avatar && input type range */}
+                <div
+                    className='w-auto min-h-[500px] md:h-auto lg:h-auto '
+                >
+                    <img
+                        src={
+                            // currentSongInfo?.musicAvatarUrl
+                            // ||
+                            "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
+                        }
+                        alt="Music Avatar"
+                        className=' w-[97%] md:w-96 object-cover rounded-3xl m-1'
+                    />
 
-                <img
-                    src={
-                        // currentSongInfo?.musicAvatarUrl
-                        // ||
-                        "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
-                    }
-                    alt="Music Avatar"
-                    className=' w-[97%] md:w-96 object-cover rounded-3xl m-1'
-                />
-
+                </div>
                 <input
                     type="range"
                     min="0"
@@ -107,56 +105,59 @@ function MusicPlayerFull(
                     className='w-full accent-slate-600 transition-transform'
                 />
 
+
                 {/* ====> bottom controllers */}
                 <div
-                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
+                    className='w-full h-[40%] md:h-auto lg:h-auto flex flex-wrap justify-between p-1 md:bg-slate-950   items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
                     <AddToPlayList
                         currentSongInfo={currentSongInfo}
                         playListId={playListId}
                     />
-                </div >
-                <div
-                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
-                >
-                    <div className="flex w-full mt-3 mb-2 justify-around">
-                        <button onClick={prevFn}>
-                            <SkipBack className="w-6 h-6 text-blue-500" />
-                        </button>
-                        <button onClick={plPaFn}>
-                            {isPlaying ? (
-                                <Pause className="w-6 h-6 text-blue-500" />
-                            ) : (
-                                <Play
-                                    className="w-6 h-6  text-slate-600"
-                                />
-                            )}
-                        </button>
-                        <button onClick={nextFn}>
-                            <SkipForward className="w-6 h-6 text-blue-500" />
-                        </button>
-                    </div>
-                    <hr className='w-[95%]' />
-                    <div className='ml-1 w-[65%] overflow-hidden h-12 '>
-                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
-                    </div>
+                    {/* buttons */}
                     <div
-                        className='w-[30%]'
+                        className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
                     >
-                        {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
-                        {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+
+                        <div className='ml-1 w-[65%] overflow-hidden h-12 '>
+                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
+                        </div>
+                        <div
+                            className='w-[30%]'
+                        >
+                            {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
+                            {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+                        </div>
+                        <hr className='w-[95%]' />
+                        <div className="flex w-full mt-3 mb-2 justify-around">
+                            <button onClick={prevFn}>
+                                <SkipBack className="w-6 h-6 text-blue-500" />
+                            </button>
+                            <button onClick={plPaFn}>
+                                {isPlaying ? (
+                                    <Pause className="w-6 h-6 text-blue-500" />
+                                ) : (
+                                    <Play
+                                        className="w-6 h-6  text-slate-600"
+                                    />
+                                )}
+                            </button>
+                            <button onClick={nextFn}>
+                                <SkipForward className="w-6 h-6 text-blue-500" />
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </div >
             </div>
 
 
-            {/* music playList songs container */}
-            <div className=' lg:flex my-auto mt-3  h-[100%] w-fit  justify-around items-center   hidden  '>
+            {/* music playList  && songs container */}
+            <div className=' lg:flex my-auto mt-3  h-[100%] min-w-fit  lg:w-[50%] md:w-[50%]  justify-around items-center   hidden  '>
                 <div
                     className='flex'
                 >
                     <div
-                        className="flex flex-col w-max lg:w-[40%] md:w-[50%] mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
+                        className="flex flex-col w-full   mx-auto h-[75vh] border border-solid border-white  bg-[#040303]  overflow-auto gap-4 p-2 rounded-3xl  shadow-2xl mb-11"
                     >
                         {allMusicInfo.map((music: any) => (
 
