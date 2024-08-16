@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+      <meta name="google-adsense-account" content="ca-pub-1775178587078079" />
 
 
       <AuthProvider>
@@ -58,7 +58,7 @@ export default function RootLayout({
           >
             {/* <Navbar className="" /> */}
             {children}
-            <Toaster position="bottom-center"  containerClassName=" text-white"  />
+            <Toaster position="bottom-center" containerClassName=" text-white" />
           </ThemeProvider>
         </body>
       </AuthProvider>
