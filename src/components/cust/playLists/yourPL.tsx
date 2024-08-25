@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 
 
-function YourPl({ allPlayLists, user }: { allPlayLists: any, user: any }) {
+function YourPl({ allPlayLists }: { allPlayLists: any }) {
     const [createNew, setCreatePlaylist] = useState(false);
     const [playLists, setPlayLists] = useState<any>();
     const [loading, setLoading] = useState(true);
@@ -76,6 +76,7 @@ function YourPl({ allPlayLists, user }: { allPlayLists: any, user: any }) {
                 error={error}
                 isUserLogin={isUserLogin}
                 playLink='y'
+                headline='Your Playlists'
             />
             {
                 createNew &&

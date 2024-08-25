@@ -91,7 +91,7 @@ function MusicPlayerFull(
                             "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
                         }
                         alt="Music Avatar"
-                        className=' w-[97%] md:w-96 object-cover rounded-3xl m-1'
+                        className=' w-[97%] md:w-96 object-cover rounded-3xl m-1 border border-solid border-green-500 '
                     />
 
                 </div>
@@ -109,7 +109,7 @@ function MusicPlayerFull(
                         {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
                         {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
                     </div>
-                    <hr className='w-[95%]' />
+
                     <input
                         type="range"
                         min="0"
@@ -137,7 +137,9 @@ function MusicPlayerFull(
                             <SkipForward className="w-6 h-6 text-blue-500" />
                         </button>
                     </div>
+
                 </div>
+                <hr className='w-[95%] mx-auto bg-slate-700 ' />
                 <AddToPlayList
                     currentSongInfo={currentSongInfo}
                     playListId={playListId}

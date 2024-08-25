@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { Button } from '../../ui/button'
 import tost from 'react-hot-toast'
 import { Input } from '../../ui/input'
+import RA from '@/utils/openApiFuncs/randomAvatar'
 
 function CreatePlaylistByUser(
     {
@@ -34,17 +35,13 @@ function CreatePlaylistByUser(
                     playListSingers: [],
                     like: 0,
                     likeId: [],
-                    musicPlayListAvatar: '',
+                    musicPlayListAvatar: await RA.getAvatar(),
                     musicPlayListBanner: '',
                     publicPlayList: false,
                     createdBy: currentUser.$id
                 }
             )
             console.log('playList', result);
-
-
-
-
 
             if (result) {
 
@@ -53,6 +50,7 @@ function CreatePlaylistByUser(
                     {
 
                         createdPlayLists: [result.$id, ...userPrefs?.createdPlayLists]
+
                     }
                 )
                 console.log('user', user);
@@ -80,12 +78,12 @@ function CreatePlaylistByUser(
 
     return (
         <div
-            className={`w-full min-h-60 h-max bg-black flex flex-col fixed my-auto top-0 bottom-0 right-0 left-0 justify-center items-center gap-5 rounded-2xl  ${isDisplay ? 'flex' : 'hidden'}`}
+            className={`w-full md:w-[50%] mx-auto border border-solid border-slate-600  min-h-60 h-max bg-black flex flex-col fixed my-auto top-0 bottom-0 right-0 left-0 justify-center items-center gap-5 rounded-2xl backdrop:bg-zinc-800  ${isDisplay ? 'flex' : 'hidden'}`}
         >
             <form
                 action=""
                 onSubmit={(e) => {
-                    e.preventDefault()
+                    e?.preventDefault()
                     createPlaylist()
                 }}
                 className={`w-[97%] md:w-70% h-min-[200px] flex flex-col gap-3 justify-center items-center `}
@@ -94,12 +92,11 @@ function CreatePlaylistByUser(
                     type="text"
                     placeholder="Enter a playlist name ....."
                     name="nameForPlayList"
-                    onChange={(e: any) => setNameForPlayList(e.target.value)}
+                    onChange={(e) => setNameForPlayList(e?.target?.value)}
                     required={true}
                 />
                 <Button
                     type="submit"
-
                 >
                     Create
                 </Button>
@@ -108,7 +105,7 @@ function CreatePlaylistByUser(
             <Button
                 type='button'
                 onClick={() => setCreatePlaylist(false)}
-                className='bg-red-950 text-white w-full'
+                className='bg-red-700 text-white w-full'
             >
                 Close
             </Button>

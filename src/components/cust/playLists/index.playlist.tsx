@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PageUi from '../../page/pageui';
-import musicPlayList from '@/config/dataBase/playListsDb/musicPlayList';
 import Link from 'next/link';
 import cryptoUtil from '@/lib/util/CryptoUtil';
 import userAvatarDBConfig from '@/config/dataBase/userPrefs/userAvatarDBConfig';
-import { useAuth } from '@/context/AuthContext';
+import RA from '@/utils/openApiFuncs/randomAvatar';
 
 interface Playlists {
     name: string;
@@ -23,13 +22,15 @@ function IndexPlayList(
         loading,
         error,
         isUserLogin,
-        playLink
+        playLink,
+        headline
     }: {
         playLists: Playlists[],
         loading: boolean,
         error: string | null,
         isUserLogin: boolean,
-        playLink: string
+        playLink: string,
+        headline?: string
     }
 ) {
 
@@ -38,7 +39,7 @@ function IndexPlayList(
     return (
         <PageUi className="  h-min-screen h-max  ">
             <div className="p-4">
-                <h1 className="text-2xl font-bold mb-4">All Playlists</h1>
+                <h1 className="text-2xl font-bold mb-4">{headline || 'All Playlists'}</h1>
                 {loading ?
                     (
                         <p>Loading...</p>
@@ -82,15 +83,14 @@ function IndexPlayList(
                                                         src={
                                                             String
                                                                 (playlist.musicPlayListAvatar ?
-                                                                    userAvatarDBConfig.getUserAvatarPreviewWithPrefs(
-                                                                        playlist.musicPlayListAvatar,
-                                                                        100)
+
+                                                                    'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png'
                                                                     :
-                                                                    playlist.musicPlayListAvatarUrl
+                                                                    (playlist?.musicPlayListAvatarUrl?.replaceAll('500x500', '50x50') || 'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png')
                                                                 )
                                                         }
                                                         alt="playListImg"
-                                                        className='rounded-full w-[50px] h-[50px] mb-2 border-2 border-solid border-slate-800  '
+                                                        className='rounded-full w-[50px] h-[50px] mb-2 border-2 border-solid border-slate-800 bg-slate-700  '
                                                     />
                                                     {/* title of playlist */}
                                                     <p className="text-xl font-bold mb-2">{playlist.name} </p>
