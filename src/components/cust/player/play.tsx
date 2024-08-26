@@ -2,7 +2,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import React, { useEffect, useState } from 'react';
-import cryptoUtil from '@/lib/util/CryptoUtil';
 import MusicPlayer from './musicPlayer';
 import { useAuth } from '@/context/AuthContext';
 import PageUi from '@/components/page/pageui';
@@ -61,10 +60,6 @@ function Play({ playList }: { playList: any }) {
                 <p className="text-red-500">{error}</p>
             ) : musicDetails.length <= 0 ? (
                 <p>No songs found in this playlist</p>
-            ) : !isUserLogin ? (
-                <div className="grid grid-cols-1 w-max mx-auto gap-4">
-                    Please login to play music
-                </div>
             ) : (
                 <div className={`my-auto mt-3  h-fit min-h-screen  bg-black justify-around items-center `} >
 
