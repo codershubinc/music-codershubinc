@@ -66,15 +66,16 @@ export default function Home() {
       console.log('witchPlaylist', whichPlayLists);
       console.log('user ', currentUser);
       fetchPlayLists()
+    } else {
+      fetchPlayLists()
     }
   }, [whichPlayLists, currentUser])
 
 
   useEffect(() => {
     let atLocal = LOCAL.get('whichPlayLists')
-    if (atLocal) {
+    if (atLocal && currentUser) {
       console.log('at local ', atLocal);
-
       setWhichPlayLists(atLocal)
     } else {
       setWhichPlayLists('all')
