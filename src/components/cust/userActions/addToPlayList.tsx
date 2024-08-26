@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser'
 import LOCAL from '@/utils/func/localStorage'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
+import { log } from 'console'
 
 function AddToPlayList(
     {
@@ -39,7 +40,6 @@ function AddToPlayList(
 
         }
 
-
         if (currentSongInfo?.url) {
             console.log('current song info.name', currentSongInfo);
 
@@ -56,27 +56,33 @@ function AddToPlayList(
     }, [currentSongInfo])
 
     const getUser = async () => {
-        const result = await authService.getCurrentUser()
-        setCurrentUser(result)
-        if (result.$id) {
-            console.log('fond a user ', result);
-            const userPrefs = await dbConfig.getDocument(result.$id)
-            if (userPrefs) {
-                console.log('got a user prefs', userPrefs);
-                setUserPrefs(userPrefs)
-                if (!userPrefs?.createdPlayLists[0]) return
-                console.log('id = ', userPrefs?.createdPlayLists[0]);
+        try {
+            const result = await authService.getCurrentUser()
+            setCurrentUser(result)
+            if (result.$id) {
+                console.log('fond a user ', result);
+                const userPrefs = await dbConfig.getDocument(result.$id)
+                if (userPrefs) {
+                    console.log('got a user prefs', userPrefs);
+                    setUserPrefs(userPrefs)
+                    if (!userPrefs?.createdPlayLists[0]) return
+                    console.log('id = ', userPrefs?.createdPlayLists[0]);
 
-                const pl = await musicPlayListByUser.getMusicPlayListsByUser(userPrefs?.$id)
-                // console.log('all pl inf', pl);
+                    const pl = await musicPlayListByUser.getMusicPlayListsByUser(userPrefs?.$id)
+                    // console.log('all pl inf', pl);
 
 
-                if (pl) {
-                    console.log('got a playlist info', pl);
-                    setAllPlayListsInfo(pl)
+                    if (pl) {
+                        console.log('got a playlist info', pl);
+                        setAllPlayListsInfo(pl)
+                    }
+
                 }
-
             }
+        } catch (error) {
+            console.log('err', error);
+            setUserPrefs({})
+            setCurrentUser({})
         }
     }
 
@@ -182,7 +188,7 @@ function AddToPlayList(
                 };
             });
 
-            toast.success('Succesfully removed from pl' + id, { id: loadingToast })
+            toast.success('Successfully removed from pl' + id, { id: loadingToast })
 
         } catch (error: any) {
             console.log('failed to add playlist', error);
