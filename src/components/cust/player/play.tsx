@@ -98,7 +98,6 @@ function Play({ playList }: { playList: any }) {
 
                                                         'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png'
                                                         :
-
                                                         music.musicAvatarUrl
                                                 )
                                         }

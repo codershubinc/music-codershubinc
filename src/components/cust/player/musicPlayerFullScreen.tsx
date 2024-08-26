@@ -71,7 +71,7 @@ function MusicPlayerFull(
                     >
                         <span className='font-bold text-slate-700 text-lg'> Currently Playing ...</span>
                         <br />
-                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + '...'}
                     </h1>
                     <hr className='w-[95%] mx-auto' />
                     <p className='pl-2'>
@@ -100,14 +100,16 @@ function MusicPlayerFull(
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
 
-                    <div className='ml-1 w-[65%] overflow-hidden h-12 '>
-                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split('[')[0]}
-                    </div>
-                    <div
-                        className='w-[30%]'
-                    >
-                        {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
-                        {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+                    <div className='ml-1 w-full flex justify-between items-center  overflow-hidden h-12 '>
+                        <div>
+                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + '...'}
+                        </div>
+                        <div
+                            className='w-[30%]'
+                        >
+                            {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
+                            {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+                        </div>
                     </div>
 
                     <input
@@ -116,17 +118,17 @@ function MusicPlayerFull(
                         max={duration}
                         value={currentTime}
                         onChange={(event) => seekFn(event)}
-                        style={{ width: '100%', animation: 'ease-in-out', }}
+                        // style={{ width: '100%', animation: 'ease-in-out', }}
                         className='w-full accent-slate-600 transition-transform'
                     />
                     {/* buttons */}
                     <div className="flex w-full mt-3 mb-2 justify-around">
                         <button onClick={prevFn}>
-                            <SkipBack className="w-6 h-6 text-blue-500" />
+                            <SkipBack className="w-6 h-6 text-blue-500 hover:text-slate-600" />
                         </button>
                         <button onClick={plPaFn}>
                             {isPlaying ? (
-                                <Pause className="w-6 h-6 text-blue-500" />
+                                <Pause className="w-6 h-6 text-blue-500 hover:text-slate-600" />
                             ) : (
                                 <Play
                                     className="w-6 h-6  text-slate-600"
@@ -134,7 +136,7 @@ function MusicPlayerFull(
                             )}
                         </button>
                         <button onClick={nextFn}>
-                            <SkipForward className="w-6 h-6 text-blue-500" />
+                            <SkipForward className="w-6 h-6 text-blue-500 hover:text-slate-600" />
                         </button>
                     </div>
 
