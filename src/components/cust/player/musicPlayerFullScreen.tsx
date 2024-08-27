@@ -52,7 +52,7 @@ function MusicPlayerFull(
 
         <div
             className={
-                `  max-h-screen h-screen w-[100vw] m-0  top-0 left-0 right-0 bottom-2 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row overscroll-y-contain lg:justify-between md:justify-center  z-50 ${isDisplay ? 'flex' : 'hidden'} `
+                `  max-h-screen h-screen w-[100vw] m-0  top-0 left-0 right-0 bottom-2 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row overscroll-y-contain lg:justify-between md:justify-evenly   z-50 ${isDisplay ? 'flex' : 'hidden'} `
             }
         >
             <Button
@@ -61,9 +61,10 @@ function MusicPlayerFull(
             >^</Button>
             {/* music info && music player */}
             <div
-                className='mx-auto h-screen text-left flex justify-between flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-center md:items-center'
+                className='mx-auto h-screen text-left flex justify-between flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-evenly md:items-center'
             >
-                <div
+                {/*
+                 <div
                     className='min-h-32 max-h-fit  md:h-auto lg:h-auto  flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
                 >
                     <h1
@@ -79,7 +80,7 @@ function MusicPlayerFull(
                         <br />
                         {DecodeHTMLEntities(currentSongInfo?.singer.map((singer: string) => singer.trim()).join(' , ') || 'singers ....')}
                     </p>
-                </div>
+                </div> */}
                 {/* ====> music avatar && input type range */}
                 <div
                     className='h-max   md:h-auto lg:h-auto '
