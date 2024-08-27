@@ -23,9 +23,7 @@ function Page() {
         if (encryptedId.length > 0) {
             const playListId = cryptoUtil.decryptString(encryptedId);
             setPlayListId(playListId);
-
         }
-
     }, []);
     // >=====> getting playlist details
     useEffect(() => {
@@ -70,24 +68,26 @@ function Page() {
             return
         }
         console.log('current music ids', musicDetails.map((music: any) => music.musicUri));
-
-
     }, [musicDetails])
 
 
-
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-    if (error) {
-        return <div>{error}...</div>;
-    }
     return (
-        <PageUi className='h-screen'>
-            <p>hi {playListId}</p>
-            <p>{currentMusicPlaylist.name}</p>
-        </PageUi>
+        loading
+            ?
+            <PageUi className='h-screen'>
+                <div>Loading...</div>
+            </PageUi>
+            :
+            error
+                ?
+                <PageUi className='h-screen'>
+                    <div>{error}...</div>
+                </PageUi>
+                :
+                <PageUi className='h-screen'>
+                    <p>hi {playListId}</p>
+                    <p>{currentMusicPlaylist.name}</p>
+                </PageUi>
     )
 }
 

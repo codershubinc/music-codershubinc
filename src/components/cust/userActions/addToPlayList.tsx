@@ -40,6 +40,7 @@ function AddToPlayList(
 
         }
 
+        console.log('current song info.name', currentSongInfo);
         if (currentSongInfo?.url) {
             console.log('current song info.name', currentSongInfo);
 
@@ -215,9 +216,9 @@ function AddToPlayList(
                                                             variant={'ghost'}
                                                             onClick={() => playlistController(allPlayListsInfo?.documents[0]?.$id)}
                                                         >
-                                                            {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
+                                                            {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500 hover:text-slate-600" aria-label='hi' /> : 'create playlist'}
                                                         </Button>
-                                                        <p className='text-sm text-slate-300' >add to <br />  <span className='text-blue-500' > {` ${LOCAL.get('lastAddedPlaylistId') ? getPlById(LOCAL.get('lastAddedPlaylistId'))?.name || 'playlist' : allPlayListsInfo?.documents[0]?.name} `} </span> </p>
+                                                        <p className='text-sm text-slate-300' >add to <br />  <span className='text-blue-500 hover:text-slate-600' > {` ${LOCAL.get('lastAddedPlaylistId') ? getPlById(LOCAL.get('lastAddedPlaylistId'))?.name || 'playlist' : allPlayListsInfo?.documents[0]?.name} `} </span> </p>
                                                     </div>
                                                     :
                                                     <div>
@@ -227,11 +228,13 @@ function AddToPlayList(
                                                                 variant={'ghost'}
                                                                 onClick={() => removeFromPl(playListId)}
                                                             >
-                                                                {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500" aria-label='hi' /> : 'create playlist'}
+                                                                {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500 hover:text-slate-600" aria-label='hi' /> : 'create playlist'}
                                                             </Button>
                                                             <p className='text-sm text-white' >remove from pl
                                                                 <br />
-                                                                {`${playListId ? getPlById(playListId)?.name : allPlayListsInfo?.documents[0]?.name}`}
+                                                                <span className='text-blue-500 hover:text-slate-600' >
+                                                                    {`${playListId ? getPlById(playListId)?.name : allPlayListsInfo?.documents[0]?.name}`}
+                                                                </span>
                                                             </p>
                                                         </>
                                                     </div>

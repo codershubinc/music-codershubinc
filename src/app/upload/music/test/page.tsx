@@ -43,7 +43,7 @@ function Page() {
             setUserPrefs(updatedUserPrefs)
             console.log('user', user);
             console.log('updated', userPrefs.createdPlayLists);
-            
+
 
         }
 
