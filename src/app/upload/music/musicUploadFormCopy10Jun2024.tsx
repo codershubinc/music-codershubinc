@@ -19,6 +19,9 @@
 //     SelectValue,
 // } from "@/components/ui/select"
 
+
+
+//  #section #copyOfMusicUploadForm 
 // const MusicUploadForm = ({ className }: { className: string }) => {
 //     const { register, handleSubmit } = useForm();
 //     const navigate = useRouter()
@@ -36,7 +39,7 @@
 //     const uploadMusicToDb = async (data: any) => {
 //         setLoading(true);
 //         try {
-//             // Upload music file
+//            // Upload music file
 //             const musicFile = data.music[0];
 //             const musicResponse = await music.uploadMusic(musicFile);
 //             console.log('Music File uploaded:', musicResponse);
@@ -173,6 +176,4 @@
 //             </form>
 //         </div>
 //     );
-// };
-
-
+// // };
