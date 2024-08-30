@@ -63,6 +63,24 @@ function MusicPlayerFull(
             <div
                 className='mx-auto h-screen text-left flex justify-between flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-evenly md:items-center'
             >
+                {/*
+                 <div
+                    className='min-h-32 max-h-fit  md:h-auto lg:h-auto  flex flex-col w-[99%] mx-auto border bg-black border-slate-600 rounded-sm rounded-tl-3xl rounded-br-3xl '
+                >
+                    <h1
+                        className='ml-2 text-2xl'
+                    >
+                        <span className='font-bold text-slate-700 text-lg'> Currently Playing ...</span>
+                        <br />
+                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + '...'}
+                    </h1>
+                    <hr className='w-[95%] mx-auto' />
+                    <p className='pl-2'>
+                        <span className='font-bold text-slate-700 text-lg'> By ...</span>
+                        <br />
+                        {DecodeHTMLEntities(currentSongInfo?.singer.map((singer: string) => singer.trim()).join(' , ') || 'singers ....')}
+                    </p>
+                </div> */}
                 {/* ====> music avatar && input type range */}
                 <div
                     className='h-max   md:h-auto lg:h-auto '
@@ -74,7 +92,7 @@ function MusicPlayerFull(
                             "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
                         }
                         alt="Music Avatar"
-                        className=' w-[97%] md:w-auto lg:w-full object-cover rounded-3xl m-1   '
+                        className=' w-[97%] md:w-96 lg:w-full object-cover rounded-3xl m-1   '
                     />
 
                 </div>

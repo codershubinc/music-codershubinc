@@ -13,10 +13,6 @@ const SearchIfSingerPlayListExist = () => {
 
     const handleSearch = async () => {
         console.log('Searching music playlists...');
-        const queries: any = {
-            queryType: 'name',
-            queryName: searchQuery
-        }
 
         try {
             const results = await musicPlayList.getMusicPlayList(searchQuery);
@@ -34,7 +30,13 @@ const SearchIfSingerPlayListExist = () => {
 
     return (
         <div>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
+            <form
+                className="grid w-full max-w-sm items-center gap-1.5"
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    handleSearch()
+                }}
+            >
                 <Label htmlFor="search">Search</Label>
                 <Input
                     type="text"
@@ -43,8 +45,13 @@ const SearchIfSingerPlayListExist = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
-            </div>
-            <Button onClick={handleSearch}>Search</Button>
+                <Button
+                    onClick={handleSearch}
+                    type='submit'
+                >
+                    Search
+                </Button>
+            </form>
 
             {searchResults?.length > 0 && (
                 <div>
@@ -61,9 +68,10 @@ const SearchIfSingerPlayListExist = () => {
                                     <CopyButton textToCopy={result.$id} />
 
                                 </li>
-                                <li key={result.$id}>avatar id = {result.musicPlayListAvatar}
-                                </li>
-                                <li className='flex items-center gap-1'> <p className='text-gray-500 text-sm'>copy avatar id</p> <CopyButton textToCopy={result.musicPlayListAvatar} /> </li>
+                                {/* <li key={result.$id}>
+                                    avatar id = {result.musicPlayListAvatar}
+                                </li> */}
+                                {/* <li className='flex items-center gap-1'> <p className='text-gray-500 text-sm'>copy avatar id</p> <CopyButton textToCopy={result.musicPlayListAvatar} /> </li> */}
                             </div>
                         ))}
                     </ul>
