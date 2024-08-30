@@ -59,11 +59,22 @@ function MusicPlayerFull(
                 className='text-3xl bg-slate-950 text-white fixed top-0 right-0 rotate-180 md:right-3 lg:right-4 '
                 onClick={() => setIsDisplay(false)}
             >^</Button>
+
+
+
+
             {/* music info && music player */}
             <div
                 className='mx-auto h-screen text-left flex justify-between flex-col lg:border lg:border-slate-600 border-solid lg:p-3 lg:w-[40%] lg:rounded-2xl  md:border md:border-slate-600  md:p-3 md:rounded-2xl md:w-full md:justify-evenly md:items-center'
             >
-                {/* ====> music avatar && input type range */}
+
+                {/* // ~add to playlist btn */}
+                <AddToPlayList
+                    currentSongInfo={currentSongInfo}
+                    playListId={playListId}
+                />
+
+                {/* // ? ====> music avatar  */}
                 <div
                     className='h-max   md:h-auto lg:h-auto '
                 >
@@ -74,19 +85,22 @@ function MusicPlayerFull(
                             "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
                         }
                         alt="Music Avatar"
-                        className=' w-[97%] md:w-auto lg:w-full object-cover rounded-3xl m-1   '
+                        className=' w-[90%] mx-auto mt-2 md:w-auto lg:w-full object-cover rounded-3xl m-1 '
                     />
 
                 </div>
-                {/* buttons */}
+                {/* // ~ bottom control section   */}
                 <div
                     className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
 
                     <div className='ml-1 w-full flex justify-between items-center  overflow-hidden h-12 '>
+
+                        {/* // ! current music name */}
                         <div>
                             {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + '...'}
                         </div>
+                        {/* // ! current music duration display */}
                         <div
                             className='w-[30%]'
                         >
@@ -94,7 +108,7 @@ function MusicPlayerFull(
                             {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
                         </div>
                     </div>
-
+                    {/* // ! input type range  */}
                     <input
                         type="range"
                         min="0"
@@ -104,7 +118,7 @@ function MusicPlayerFull(
                         // style={{ width: '100%', animation: 'ease-in-out', }}
                         className='w-full accent-slate-600 transition-transform'
                     />
-                    {/* buttons */}
+                    {/* // ! audio controller  buttons */}
                     <div className="flex w-full mt-3 mb-2 justify-around">
                         <button onClick={prevFn}>
                             <SkipBack className="w-6 h-6 text-blue-500 hover:text-slate-600" />
@@ -125,16 +139,10 @@ function MusicPlayerFull(
 
                 </div>
                 <hr className='w-[95%] mx-auto bg-slate-700 ' />
-                <AddToPlayList
-                    currentSongInfo={currentSongInfo}
-                    playListId={playListId}
-                />
-
 
             </div>
 
-
-            {/* music playList  && songs container */}
+            {/* //? music playList  && songs container */}
             <div className=' lg:flex my-auto mt-3  h-[100%] min-w-fit  lg:w-[50%] md:w-[50%]  justify-around items-center   hidden  '>
                 <div
                     className='flex'
