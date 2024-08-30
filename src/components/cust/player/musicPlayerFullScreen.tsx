@@ -91,14 +91,14 @@ function MusicPlayerFull(
                 </div>
                 {/* // ~ bottom control section   */}
                 <div
-                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 items-center rounded-3xl md:border border-slate-600  md:p-3  '
+                    className='w-full flex flex-wrap justify-between p-1 md:bg-slate-950 min-h-20 h-max items-center rounded-3xl md:border border-slate-600  md:p-3  '
                 >
 
-                    <div className='ml-1 w-full flex justify-between items-center  overflow-hidden h-12 '>
+                    <div className='ml-1 w-full flex justify-between items-center  overflow-hidden min-h-12 '>
 
                         {/* // ! current music name */}
                         <div>
-                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + '...'}
+                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + ' ...'}
                         </div>
                         {/* // ! current music duration display */}
                         <div
