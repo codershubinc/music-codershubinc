@@ -121,19 +121,19 @@ function MusicPlayerFull(
                     {/* // ! audio controller  buttons */}
                     <div className="flex w-full mt-3 mb-2 justify-around">
                         <button onClick={prevFn}>
-                            <SkipBack className="w-6 h-6 text-blue-500 hover:text-slate-600" />
+                            <SkipBack size={30} className="text-blue-500 hover:text-slate-600" />
                         </button>
                         <button onClick={plPaFn}>
                             {isPlaying ? (
-                                <Pause className="w-6 h-6 text-blue-500 hover:text-slate-600" />
+                                <Pause size={30} className="text-blue-500 hover:text-slate-600" />
                             ) : (
                                 <Play
-                                    className="w-6 h-6  text-slate-600"
+                                    size={30} className="text-slate-600"
                                 />
                             )}
                         </button>
                         <button onClick={nextFn}>
-                            <SkipForward className="w-6 h-6 text-blue-500 hover:text-slate-600" />
+                            <SkipForward size={30} className="text-blue-500 hover:text-slate-600" />
                         </button>
                     </div>
 
