@@ -52,7 +52,7 @@ function MusicPlayerFull(
 
         <div
             className={
-                `  max-h-screen h-screen w-[100vw] m-0  top-0 left-0 right-0 bottom-2 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row overscroll-y-contain lg:justify-between md:justify-evenly   z-50 ${isDisplay ? 'flex' : 'hidden'} `
+                `  max-h-screen h-screen w-screen m-0  top-0 left-0 right-0 bottom-2 fixed rounded-xl bg-slate-900  shadow-lg flex flex-row overscroll-y-contain lg:justify-between md:justify-evenly   z-50 ${isDisplay ? 'flex' : 'hidden'} `
             }
         >
             <Button
@@ -73,7 +73,7 @@ function MusicPlayerFull(
                     currentSongInfo={currentSongInfo}
                     playListId={playListId}
                 />
-
+                <hr className='w-[95%] mx-auto bg-slate-700 ' />
                 {/* // ? ====> music avatar  */}
                 <div
                     className='h-max   md:h-auto lg:h-auto '
@@ -138,12 +138,12 @@ function MusicPlayerFull(
                     </div>
 
                 </div>
-                <hr className='w-[95%] mx-auto bg-slate-700 ' />
+
 
             </div>
 
             {/* //? music playList  && songs container */}
-            <div className=' lg:flex my-auto mt-3  h-[100%] min-w-fit  lg:w-[50%] md:w-[50%]  justify-around items-center   hidden  '>
+            <div className=' lg:flex my-auto mt-3  h-[100%]  lg:w-[60%]  justify-around items-center   hidden  '>
                 <div
                     className='flex'
                 >
