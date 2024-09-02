@@ -3,13 +3,13 @@ import authService from '@/config/auth/auth'
 import musicPlayListByUser from '@/config/dataBase/playListsDb/musicPlayListByUser'
 import dbConfig from '@/config/dataBase/userPrefs/UserDBConfig'
 import { inf } from '@/utils/saavnApis/getSongInfo.api'
-import { ListPlusIcon } from 'lucide-react'
+import { ListPlusIcon, ListXIcon, PlusSquareIcon, XIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import CreatePlaylistByUser from '../create-playlist-by-user/createPlaylistByUser'
 import LOCAL from '@/utils/func/localStorage'
 import DecodeHTMLEntities from '@/utils/func/htmlDecode'
-import { log } from 'console'
+import AddFromMultiplePlaylist from './addFromMultiplePlaylist'
 
 function AddToPlayList(
     {
@@ -28,6 +28,7 @@ function AddToPlayList(
     const [fetchedSongInfo, setFetchedSongInfo] = useState<any>()
     const [allPlayListsInfo, setAllPlayListsInfo] = useState<{ total: number; documents: any[] }>({ total: 1, documents: [] });
     const [ifCreateNewPlayList, setIfCreateNewPlayList] = useState(false)
+    const [selectFromMultiplePlaylist, setSelectFromMultiplePlaylist] = useState(false)
 
     useEffect(() => {
 
@@ -135,7 +136,7 @@ function AddToPlayList(
                         documents: updatedDocuments,
                     };
                 });
-                toast.success(DecodeHTMLEntities('song &quot;' + (cSInfo?.musicName || '') + '&quot;  added to playlist '), { id: loadingToast })
+                toast.success(DecodeHTMLEntities('song &quot;' + (cSInfo?.musicName || '') + '&quot;  added to playlist ' + updatedDoc?.name), { id: loadingToast })
 
 
             } catch (error: any) {
@@ -210,15 +211,50 @@ function AddToPlayList(
                                         <>
                                             {
                                                 !userPrefs?.createdPlayLists?.includes(playListId) ?
-                                                    <div>
-                                                        <Button
-                                                            type='button'
-                                                            variant={'ghost'}
-                                                            onClick={() => playlistController(allPlayListsInfo?.documents[0]?.$id)}
+                                                    <div
+                                                        className='flex gap-1 bg-[#020617] w-full justify-center items-center p-1 rounded-3xl mx-auto '
+                                                    >
+                                                        <div
+                                                            className='  justify-center text-center items-center border border-solid border-slate-800 rounded-xl h-full'
                                                         >
-                                                            {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500 hover:text-slate-600" aria-label='hi' /> : 'create playlist'}
-                                                        </Button>
-                                                        <p className='text-sm text-slate-300' >add to <br />  <span className='text-blue-500 hover:text-slate-600' > {` ${LOCAL.get('lastAddedPlaylistId') ? getPlById(LOCAL.get('lastAddedPlaylistId'))?.name || 'playlist' : allPlayListsInfo?.documents[0]?.name} `} </span> </p>
+                                                            <Button
+                                                                type='button'
+                                                                variant={'ghost'}
+                                                                onClick={() => playlistController(allPlayListsInfo?.documents[0]?.$id)}
+                                                            >
+                                                                {
+                                                                    userPrefs?.createdPlayLists?.length > 0 ?
+                                                                        <ListPlusIcon
+                                                                            className="w-6 h-6 text-blue-500 hover:text-slate-600"
+                                                                            aria-label='hi'
+                                                                        /> : 'create playlist'}
+                                                            </Button>
+
+                                                            <p className='text-sm text-slate-300' > <span className='text-blue-500 hover:text-slate-600' > {` ${LOCAL.get('lastAddedPlaylistId') ? getPlById(LOCAL.get('lastAddedPlaylistId'))?.name || 'playlist' : allPlayListsInfo?.documents[0]?.name} `} </span> </p>
+                                                        </div>
+                                                        <div
+                                                            className='  justify-center text-center items-center border border-solid border-slate-800 rounded-xl'
+                                                        >
+                                                            <Button
+                                                                type='button'
+                                                                variant={'ghost'}
+                                                                onClick={() => setSelectFromMultiplePlaylist(!selectFromMultiplePlaylist)}
+                                                            >
+                                                                {
+                                                                    selectFromMultiplePlaylist ?
+                                                                        <XIcon
+                                                                            className="w-6 h-6 text-blue-500 hover:text-slate-600"
+                                                                        />
+                                                                        :
+                                                                        <PlusSquareIcon
+                                                                            className="w-6 h-6 text-blue-500 hover:text-slate-600"
+                                                                        />
+
+                                                                }
+                                                            </Button>
+                                                            <br />
+                                                            add
+                                                        </div>
                                                     </div>
                                                     :
                                                     <div>
@@ -228,7 +264,8 @@ function AddToPlayList(
                                                                 variant={'ghost'}
                                                                 onClick={() => removeFromPl(playListId)}
                                                             >
-                                                                {userPrefs?.createdPlayLists?.length > 0 ? <ListPlusIcon className="w-6 h-6 text-blue-500 hover:text-slate-600" aria-label='hi' /> : 'create playlist'}
+                                                                {userPrefs?.createdPlayLists?.length > 0 ?
+                                                                    <ListXIcon className="w-6 h-6 text-blue-500 hover:text-slate-600" aria-label='hi' /> : 'create playlist'}
                                                             </Button>
                                                             <p className='text-sm text-white' >remove from pl
                                                                 <br />
@@ -263,6 +300,18 @@ function AddToPlayList(
                     isDisplay={true}
                     setCreatePlaylist={setCreatePlaylist}
                     setUser={setUserPrefs}
+                />
+            }
+            {
+                selectFromMultiplePlaylist &&
+                <AddFromMultiplePlaylist
+                    isDisplay={selectFromMultiplePlaylist}
+                    setIsDisplay={setSelectFromMultiplePlaylist}
+                    allPlaylistInfo={allPlayListsInfo}
+                    allPlayListsInfo={allPlayListsInfo}
+                    currentSongInfo={currentSongInfo}
+                    setAllPlayListsInfo={setAllPlayListsInfo}
+                    setCreatePlaylist={setCreatePlaylist}
                 />
             }
         </>
