@@ -143,7 +143,7 @@ function MusicPlayerFull(
             </div>
 
             {/* //? music playList  && songs container */}
-            <div className=' lg:flex my-auto mt-3  h-[100%]  lg:w-[60%]  justify-around items-center   hidden  '>
+            <div className=' lg:flex my-auto mt-3  h-[100%]  lg:w-max-[60%]  justify-around items-center   hidden  '>
                 <div
                     className='flex'
                 >
