@@ -5,7 +5,7 @@ class lOCAL {
     }
 
     get(key: string) {
-        return JSON.parse(localStorage.getItem(key) as string)
+        return JSON?.parse(localStorage.getItem(key) as string)
     }
 }
 const LOCAL = new lOCAL()
