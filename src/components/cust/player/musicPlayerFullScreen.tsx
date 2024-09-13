@@ -98,7 +98,7 @@ function MusicPlayerFull(
 
                         {/* // ! current music name */}
                         <div>
-                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....').split(']')[0] + ' ...'}
+                            {DecodeHTMLEntities(currentSongInfo?.musicName || 'play the music  ....')}
                         </div>
                         {/* // ! current music duration display */}
                         <div
