@@ -10,6 +10,7 @@ import musicPlayList from "@/config/dataBase/playListsDb/musicPlayList";
 import musicPlayListByUser from "@/config/dataBase/playListsDb/musicPlayListByUser";
 import LOCAL from "@/utils/func/localStorage";
 import { RefreshCw } from "lucide-react";
+import MyPage from "@/components/cust/amp/ampPage";
 
 export default function Home() {
 
@@ -100,6 +101,7 @@ export default function Home() {
 
   return (
     <PageUi>
+      <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
 
       <RefreshCw
         onClick={() => refreshCurrentPlaylists()}
@@ -159,21 +161,7 @@ export default function Home() {
 
 
               </div>
-              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1775178587078079"
-                crossOrigin="anonymous"></script>
-
-
-              {/* // ! <!-- custHorizontalAds --> */}
-              <ins
-                className="block adsbygoogle"
-                data-ad-client="ca-pub-1775178587078079"
-                data-ad-slot="2075762019"
-                data-ad-format="auto"
-                data-full-width-responsive="true">
-              </ins>
-              <script>
-                (adsbygoogle = window.adsbygoogle || []).push({ })
-              </script>
+              <MyPage />
             </>
           )
 
