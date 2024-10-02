@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import MediaSessionFunc from '../../../utils/musicControllers/mediaSession';
 import { handleSeek, pauseAudio, playAudio, player, playMusic, playNextTrack, playPreviousTrack } from '../../../utils/musicControllers/playControllers';
 import MusicPlayerFull from './musicPlayerFullScreen';
+import MusicPlayerFullZero from './musicPlayerZero/musicPlayerFullZero';
 import { Button } from '@/components/ui/button';
 import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 interface Props {
@@ -25,6 +26,7 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo,
     const [ppc, setPpc] = useState<string>('play');
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [fullScreen, setFullScreen] = useState<boolean>(false);
+    const [fullScreenZero, setFullScreenZero] = useState<boolean>(false);
 
     const router = useRouter();
 
@@ -125,7 +127,30 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo,
                 isPlaying={isPlaying}
                 playListId={playListId}
             />
-        ) : (
+        ) :
+        
+        fullScreenZero ? (
+            <>
+                <MusicPlayerFullZero
+                    currentSongInfo={currentSongInfo}
+                    isDisplay={fullScreenZero}
+                    allMusicInfo={allMusicInfo}
+                    playMusic={handleFullScreen}
+                    setIsDisplay={setFullScreenZero}
+                    plPaFn={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}
+                    nextFn={() => playNextTrack(setCurrentTrackIndex)}
+                    prevFn={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}
+                    seekFn={(event) => handleSeek(event, audioRef, setCurrentTime)}
+                    duration={duration}
+                    currentTime={currentTime}
+                    isPlaying={isPlaying}
+                    playListId={playListId}  
+                />
+            </>
+            
+        )
+        :
+        (
             <div className="w-[97%] mx-auto fixed bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2">
                 <div className='flex justify-evenly'>
                     <button onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>👈</button>
@@ -155,6 +180,10 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo,
                 <Button
                     className='absolute top-0 right-0  '
                     onClick={() => setFullScreen(true)}
+                >^</Button>
+                <Button
+                    className='absolute top-3 right-3  '
+                    onClick={() => setFullScreenZero(true)}
                 >^</Button>
             </div>
         )
