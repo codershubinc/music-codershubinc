@@ -17,8 +17,7 @@ export default function Home() {
   const [whichPlayLists, setWhichPlayLists] = useState<string>();
   const { currentUser } = useAuth()
   const [you, setYpu] = useState<any>()
-  const [all, setAll] = useState<any>()
-  const [fav, setFav] = useState<any>()
+  const [all, setAll] = useState<any>() 
   const [loading, setLoading] = useState(true)
 
 
@@ -27,6 +26,8 @@ export default function Home() {
     setLoading(true)
     try {
       if (whichPlayLists === 'all') {
+        console.log('fetching all', all);
+
         LOCAL.set('whichPlayLists', 'all')
         if (all?.documents) return
         const allPlayLists = await musicPlayList.getMusicPlayListAllWoQuery()
@@ -85,19 +86,22 @@ export default function Home() {
 
   const refreshCurrentPlaylists = () => {
     if (whichPlayLists === 'all') {
-      setAll(null)
-      return fetchPlayLists()
+      setAll({});  
+      return fetchPlayLists();  // Fetch new playlists
     }
-
+  
     if (whichPlayLists === 'you') {
-      setYpu(null)
-      return fetchPlayLists()
+      setYpu({}); 
+      return fetchPlayLists();  // Fetch new playlists
     }
-
+  
     if (whichPlayLists === 'fav') {
-      return
+      // TODO: Add functionality to refresh favorite playlists once implemented
+      console.log("Refreshing favorite playlists not implemented yet.");
+      return;
     }
-  }
+  };
+  
 
   return (
     <PageUi>
