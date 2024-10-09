@@ -8,7 +8,7 @@ function AddSongToPlayList(id: string, show: boolean, playListId: string) {
     const addMusicToPlayList = async (playListIdToAddSong: string) => {
         const result: any = await musicPlayListByUser.getMusicPlayListByUser(playListIdToAddSong)
 
-        const musicContains = [...result?.musicContains] || []
+        const musicContains = [...result?.musicContains]  //  [id, ...musicContains]
 
         try {
             const result = await musicPlayListByUser.updateMusicPlayListByUser(

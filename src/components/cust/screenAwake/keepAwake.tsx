@@ -1,13 +1,15 @@
 import { Maximize2, Minimize2 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-const KeepScreenAwake: React.FC = () => { 
+const KeepScreenAwake: React.FC = () => {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     useEffect(() => {
 
-        toggleFullscreen();
+        if (isMobileOrTablet()) {
+            toggleFullscreen();
+        }
         requestLandscape();
 
 
@@ -17,8 +19,8 @@ const KeepScreenAwake: React.FC = () => {
     };
 
     const requestLandscape = async () => {
-        if (!isMobileOrTablet())  return
-        if ('screen' in window && 'orientation' in window.screen  ) {
+        if (!isMobileOrTablet()) return
+        if ('screen' in window && 'orientation' in window.screen) {
             try {
                 const screenOrientation = window.screen.orientation as any; // Use type assertion here
                 await screenOrientation.lock('landscape');
@@ -37,27 +39,26 @@ const KeepScreenAwake: React.FC = () => {
     const toggleFullscreen = async () => {
         const documentElement = document.documentElement;
 
-        if (isMobileOrTablet()) {
-            if (isFullscreen) {
-                // Exit fullscreen
-                if (document.fullscreenElement) {
-                    await document.exitFullscreen();
-                    toast.success('Exited fullscreen mode');
+        if (isFullscreen) {
+            // Exit fullscreen
+            if (document.fullscreenElement) {
+                await document.exitFullscreen();
+                toast.success('Exited fullscreen mode');
+            }
+        } else {
+            // Request fullscreen
+            if (documentElement.requestFullscreen) {
+                try {
+                    await documentElement.requestFullscreen();
+                    toast.success('Fullscreen mode is active');
+                } catch (err: any) {
+                    toast.error(`Failed to enter fullscreen: ${err.name}, ${err.message}`);
                 }
             } else {
-                // Request fullscreen
-                if (documentElement.requestFullscreen) {
-                    try {
-                        await documentElement.requestFullscreen();
-                        toast.success('Fullscreen mode is active');
-                    } catch (err: any) {
-                        toast.error(`Failed to enter fullscreen: ${err.name}, ${err.message}`);
-                    }
-                } else {
-                    toast.error('Fullscreen API is not supported in this browser');
-                }
+                toast.error('Fullscreen API is not supported in this browser');
             }
         }
+
 
         // Toggle fullscreen state
         setIsFullscreen(!isFullscreen);

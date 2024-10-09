@@ -42,7 +42,7 @@ function Play({ playList }: { playList: any }) {
         setIsSongPlaying(true);
     };
 
-    console.log('isUserLogin', isUserLogin);
+    // console.log('isUserLogin', isUserLogin);
 
     const musicIds = musicDetails.map((music: any) => music.$id);
 
