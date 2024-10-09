@@ -46,13 +46,12 @@ const playMusic = (
 
         setCurrentSongInfo(allMusicInfo[currentTrackIndex]);
         // console.log('Current song info at play music func:', allMusicInfo[trackIndex]);
-
         const currentMusicId = (allMusicInfo[trackIndex].musicId ?
             String(music.getMusic(allMusicInfo[trackIndex].musicId)) :
             String(allMusicInfo[trackIndex].musicUri)
         );
 
-        console.log('Playing music with ID:', currentMusicId);
+        // console.log('Playing music with ID:', currentMusicId);
         audio.src = currentMusicId;
         audio.play().catch((error: any) => {
             console.error('Error playing music:', error);

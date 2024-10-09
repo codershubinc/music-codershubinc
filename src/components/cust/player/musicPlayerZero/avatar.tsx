@@ -3,8 +3,10 @@ import React from 'react'
 function Avatar(
     {
         currentSongInfo,
+        className
     }: {
-        currentSongInfo: any
+        currentSongInfo: any,
+        className?:string
     }
 ) {
     return (
@@ -18,7 +20,7 @@ function Avatar(
                     "https://img.icons8.com/?size=500&id=IxuZbtfqlooy&format=png"
                 }
                 alt="Music Avatar"
-                className=' w-[90%] mx-auto mt-2 md:w-auto lg:w-full object-cover rounded-3xl m-1 '
+                className={' w-[90%] mx-auto mt-2 md:w-auto lg:w-full object-cover rounded-3xl m-1  transition-transform duration-700 '+ className}
             />
         </div>
     )
