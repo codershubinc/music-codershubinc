@@ -2,42 +2,23 @@ import { Maximize2, Minimize2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
-const KeepScreenAwake: React.FC = () => {
-    const wakeLockRef = useRef<WakeLockSentinel | null>(null);
+const KeepScreenAwake: React.FC = () => { 
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     useEffect(() => {
-        const requestWakeLock = async () => {
-            if (!('wakeLock' in navigator)) {
-                toast.error('Wake Lock API is not supported in this browser');
-                return;
-            }
 
-            try {
-                wakeLockRef.current = await navigator.wakeLock.request('screen');
-                toast.success('Wake lock is active');
-            } catch (err: any) {
-                toast.error(`Failed to request wake lock: ${err.name}, ${err.message}`);
-            }
-        };
-
-        // Request wake lock on component mount
-        requestWakeLock();
         toggleFullscreen();
         requestLandscape();
 
-        // Release the wake lock when the component unmounts
-        return () => {
-            if (wakeLockRef.current) {
-                wakeLockRef.current.release().then(() => {
-                    toast.success('Wake lock released');
-                });
-            }
-        };
+
     }, []);
+    const isMobileOrTablet = () => {
+        return window.innerWidth <= 1024;  // Typical breakpoint for mobile/tablet (1024px or less)
+    };
 
     const requestLandscape = async () => {
-        if ('screen' in window && 'orientation' in window.screen) {
+        if (!isMobileOrTablet())  return
+        if ('screen' in window && 'orientation' in window.screen  ) {
             try {
                 const screenOrientation = window.screen.orientation as any; // Use type assertion here
                 await screenOrientation.lock('landscape');
@@ -50,29 +31,31 @@ const KeepScreenAwake: React.FC = () => {
         }
     };
 
-    
+
 
 
     const toggleFullscreen = async () => {
         const documentElement = document.documentElement;
 
-        if (isFullscreen) {
-            // Exit fullscreen
-            if (document.fullscreenElement) {
-                await document.exitFullscreen();
-                toast.success('Exited fullscreen mode');
-            }
-        } else {
-            // Request fullscreen
-            if (documentElement.requestFullscreen) {
-                try {
-                    await documentElement.requestFullscreen();
-                    toast.success('Fullscreen mode is active');
-                } catch (err: any) {
-                    toast.error(`Failed to enter fullscreen: ${err.name}, ${err.message}`);
+        if (isMobileOrTablet()) {
+            if (isFullscreen) {
+                // Exit fullscreen
+                if (document.fullscreenElement) {
+                    await document.exitFullscreen();
+                    toast.success('Exited fullscreen mode');
                 }
             } else {
-                toast.error('Fullscreen API is not supported in this browser');
+                // Request fullscreen
+                if (documentElement.requestFullscreen) {
+                    try {
+                        await documentElement.requestFullscreen();
+                        toast.success('Fullscreen mode is active');
+                    } catch (err: any) {
+                        toast.error(`Failed to enter fullscreen: ${err.name}, ${err.message}`);
+                    }
+                } else {
+                    toast.error('Fullscreen API is not supported in this browser');
+                }
             }
         }
 

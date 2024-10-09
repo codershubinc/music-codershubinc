@@ -1,9 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { Button } from '../../../ui/button'
 import KeepScreenAwake from '../../screenAwake/keepAwake';
 import Avatar from './avatar';
 import Controllers from './controlleres';
+import DecodeHTMLEntities from '@/utils/func/htmlDecode';
+import NextSongInfoDisplay from './nextSongInfoDisplay';
+import { isNotPc } from '@/utils/func/isNotPc';
 type SongInfo = {
     $id: string;
     musicName: string;
@@ -29,8 +32,7 @@ type MusicPlayerProps = {
 
 function MusicPlayerFullZero(
     {
-        currentSongInfo,
-        isDisplay,
+        currentSongInfo, 
         setIsDisplay,
         allMusicInfo,
         playMusic,
@@ -40,8 +42,7 @@ function MusicPlayerFullZero(
         duration,
         currentTime,
         seekFn,
-        isPlaying,
-        playListId,
+        isPlaying, 
     }: MusicPlayerProps
 ) {
 
@@ -49,33 +50,28 @@ function MusicPlayerFullZero(
 
     const [nextSongInfo, setNextSongInfo] = useState<SongInfo | null>(null);
 
-    useEffect(() => {
-        console.log('playListId', playListId);
+    const findNextSongInfo = () => {
+
         const currentIndex = allMusicInfo?.indexOf(currentSongInfo)
+        const nextIndex = currentIndex === -1 ? 1 : (currentIndex + 1) % allMusicInfo.length
+        setNextSongInfo(allMusicInfo[nextIndex])
+    }
 
-        if (currentIndex) {
-            console.log('currentIndex', currentIndex);
-
-
-            const nextIndex = currentIndex === -1 ? 1 : (currentIndex + 1) % allMusicInfo.length
-
-            console.log('nextSongInfo', allMusicInfo[nextIndex]);
-            setNextSongInfo(allMusicInfo[nextIndex])
-        }
-
-
-
-
+    useEffect(() => {
+        findNextSongInfo()
     }, [currentSongInfo])
 
     return (
         <div
-            className='w-screen h-screen flex flex-col justify-center items-center fixed top-0 left-0 right-0 bottom-0 z-50 bg-black'
+            className=' w-screen h-screen flex flex-col justify-center items-center fixed top-0 left-0 right-0 bottom-0 z-50 bg-black '
         >
             <div
                 className='flex w-screen h-screen   justify-evenly items-center'
             >
-                <Avatar currentSongInfo={currentSongInfo} />
+                <Avatar
+                    currentSongInfo={currentSongInfo}
+                    className={`${(isPlaying ? '' : 'scale-75')} ${isNotPc() ? ' ' :'hover:scale-105'}`}
+                />
                 <Controllers
                     allMusicInfo={allMusicInfo}
                     playMusic={playMusic}
@@ -93,21 +89,7 @@ function MusicPlayerFullZero(
 
             {/* // ! other controls */}
             <KeepScreenAwake />
-            <p>Up Next</p>
-            <div
-            className='flex text-center justify-center items-center gap-2 border border-white rounded-full p-2 mt-2 animate-aurora'
-            >
-                <img
-                    src={nextSongInfo?.musicAvatarUrl}
-                    alt=""
-                    className='w-14 h-14 rounded-full border      '
-                />
-                <p
-                className='text-white text-xl font-semibold'
-                >
-                    {nextSongInfo?.musicName}
-                </p>
-            </div>
+            <NextSongInfoDisplay nextSongInfo={nextSongInfo} nextFn={nextFn} />
             <Button
                 className='text-3xl bg-slate-950 text-white fixed top-0 right-0 rotate-180 md:right-3 lg:right-4 '
                 onClick={() => setIsDisplay(false)}
