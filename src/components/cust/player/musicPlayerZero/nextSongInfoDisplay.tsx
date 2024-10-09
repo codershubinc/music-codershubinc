@@ -24,11 +24,11 @@ function NextSongInfoDisplay({
 
     return (
         <div
-            className={`transition-all duration-700 transform w-max cursor-pointer ${isTransitioning ? 'scale-95' : 'scale-100'}`}
+            className={`transition-all duration-700 transform w-max cursor-pointer   ${isTransitioning ? 'scale-95' : 'scale-100'}`}
         >
-            <p>Up Next</p>
+            <p className='text-center' >Up Next</p>
             <div
-                className={`flex text-center justify-center items-center gap-2 border border-white rounded-full p-2 mt-2 transition-all duration-700 transform ${isNotPc() ? ' ' :'hover:scale-105'}  ${isTransitioning ? 'scale-95' : 'scale-100'}`}
+                className={`flex text-center justify-center items-center gap-2 border border-white rounded-full p-2 mt-2 transition-all duration-700 transform lg:hover:scale-105 ${isTransitioning ? 'scale-95' : 'scale-100'}`}
                 onClick={() => nextFn()}
             >
                 <img

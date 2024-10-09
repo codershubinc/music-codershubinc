@@ -1,12 +1,11 @@
 'use client'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '../../../ui/button'
 import KeepScreenAwake from '../../screenAwake/keepAwake';
 import Avatar from './avatar';
 import Controllers from './controlleres';
-import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 import NextSongInfoDisplay from './nextSongInfoDisplay';
-import { isNotPc } from '@/utils/func/isNotPc';
+
 type SongInfo = {
     $id: string;
     musicName: string;
@@ -32,7 +31,7 @@ type MusicPlayerProps = {
 
 function MusicPlayerFullZero(
     {
-        currentSongInfo, 
+        currentSongInfo,
         setIsDisplay,
         allMusicInfo,
         playMusic,
@@ -42,7 +41,7 @@ function MusicPlayerFullZero(
         duration,
         currentTime,
         seekFn,
-        isPlaying, 
+        isPlaying,
     }: MusicPlayerProps
 ) {
 
@@ -70,7 +69,7 @@ function MusicPlayerFullZero(
             >
                 <Avatar
                     currentSongInfo={currentSongInfo}
-                    className={`${(isPlaying ? '' : 'scale-75')} ${isNotPc() ? ' ' :'hover:scale-105'}`}
+                    className={`${(isPlaying ? '' : 'scale-95')} lg:hover:scale-105  `}
                 />
                 <Controllers
                     allMusicInfo={allMusicInfo}
