@@ -68,11 +68,8 @@ function IndexPlayList(
                                                 <img
                                                     src={
                                                         String
-                                                            (playlist.musicPlayListAvatar ?
-
-                                                                'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png'
-                                                                :
-                                                                (playlist?.musicPlayListAvatarUrl?.replaceAll('500x500', '50x50') || 'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png')
+                                                            (
+                                                                (playlist?.[playLink==='y'?'musicPlayListAvatar':'musicPlayListAvatarUrl']?.replaceAll('500x500', '50x50') || 'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png')
                                                             )
                                                     }
                                                     alt="playListImg"
