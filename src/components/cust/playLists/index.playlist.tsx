@@ -1,9 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PageUi from '../../page/pageui';
 import Link from 'next/link';
 import cryptoUtil from '@/lib/util/CryptoUtil';
+import getAvatarInitials, { asyncHandler } from '@/lib/util/avatar';
 interface Playlists {
     name: string;
     $id: string;
@@ -30,6 +31,32 @@ function IndexPlayList(
         headline?: string
     }
 ) {
+
+
+
+    // State to store avatar URLs for each playlist item
+    const [avatarUrls, setAvatarUrls] = useState<{ [key: string]: string }>({});
+
+    useEffect(() => {
+        const fetchAvatars = async () => {
+            const urls: { [key: string]: string } = {};
+            if (!playLists) return;
+            for (const playlist of playLists) {
+                if (!playlist.musicPlayListAvatarUrl) {
+                    // Fetch avatar initials for playlists that don’t have a URL
+                    try {
+                        const avatarUrl = await getAvatarInitials(playlist.name);
+                        urls[playlist.$id] = avatarUrl;
+                    } catch (error) {
+                        console.error(`Failed to fetch avatar for ${playlist.name}`, error);
+                    }
+                }
+            }
+            setAvatarUrls(urls);
+        };
+
+        fetchAvatars();
+    }, [playLists]);
 
 
 
@@ -69,7 +96,11 @@ function IndexPlayList(
                                                     src={
                                                         String
                                                             (
-                                                                (playlist?.[playLink==='y'?'musicPlayListAvatar':'musicPlayListAvatarUrl']?.replaceAll('500x500', '50x50') || 'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png')
+                                                                playlist?.musicPlayListAvatarUrl
+                                                                    ?
+                                                                    playlist?.musicPlayListAvatarUrl?.replaceAll('500x500', '50x50') || 'https://usagif.com/wp-content/uploads/loading-45.gif'
+                                                                    :
+                                                                    avatarUrls[playlist?.$id] || 'https://usagif.com/wp-content/uploads/loading-45.gif'
                                                             )
                                                     }
                                                     alt="playListImg"

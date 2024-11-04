@@ -8,14 +8,45 @@ import PageUi from '@/components/page/pageui';
 import { LampContainer } from '@/components/ui/lamp';
 import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 import GetMusic from '@/utils/musicControllers/musicDB/musicFromDB';
+import Image from 'next/image';
+import getAvatarInitials from '@/lib/util/avatar';
 
 function Play({ playList }: { playList: any }) {
 
     const [musicDetails, setMusicDetails] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { setIsSongPlaying, isUserLogin } = useAuth();
+    const { setIsSongPlaying } = useAuth();
     const [id, setId] = useState('');
+
+    // State to store avatar URLs for each playlist item
+    const [avatarUrls, setAvatarUrls] = useState<{ [key: string]: string }>({});
+
+    useEffect(() => {
+        const fetchAvatars = async () => {
+            const urls: { [key: string]: string } = {};
+            if (!musicDetails) return;
+
+            for (const playlist of musicDetails) {
+                if (!playlist.musicAvatarUrl) {
+                    // Fetch avatar initials for playlists that don’t have a URL
+                    try {
+                        const avatarUrl = await getAvatarInitials(playlist.musicName);
+                        urls[playlist.$id] = avatarUrl;
+                        console.log('id', playlist.$id);
+
+                    } catch (error) {
+                        console.error(`Failed to fetch avatar for ${playlist.musicName}`, error);
+                    }
+                }
+                else return
+            }
+            setAvatarUrls(urls);
+
+        };
+
+        fetchAvatars();
+    }, [musicDetails]);
 
 
 
@@ -55,6 +86,7 @@ function Play({ playList }: { playList: any }) {
             {loading ? (
                 <LampContainer>
                     <p>Loading...</p>
+                    <Image src='https://www.citypng.com/public/uploads/preview/blue-round-loading-circle-icon-png-701751694961620zplcjez0da.png' alt="loading" width={100} height={100} className='bg-black animate-spin duration-75' />
                 </LampContainer>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
@@ -89,11 +121,12 @@ function Play({ playList }: { playList: any }) {
                                         src={
                                             String
                                                 (
-                                                    playList.musicPlayListAvatar ?
+                                                    music.musicAvatarUrl ?
 
-                                                        'https://img.icons8.com/?size=80&id=IxuZbtfqlooy&format=png'
-                                                        :
                                                         music.musicAvatarUrl
+                                                        :
+                                                        avatarUrls[music?.$id] || 'https://usagif.com/wp-content/uploads/loading-45.gif'
+
                                                 )
                                         }
 
