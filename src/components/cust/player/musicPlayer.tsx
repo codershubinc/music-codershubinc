@@ -8,6 +8,7 @@ import MusicPlayerFull from './musicPlayerFullScreen';
 import MusicPlayerFullZero from './musicPlayerZero/musicPlayerFullZero';
 import { Button } from '@/components/ui/button';
 import DecodeHTMLEntities from '@/utils/func/htmlDecode';
+import { Pause, Play, SkipBack, SkipForward } from 'lucide-react';
 interface Props {
     musicIds: string[];
     playMusicWithId: string;
@@ -153,11 +154,21 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo,
         (
             <div className="w-[97%] mx-auto fixed bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2">
                 <div className='flex justify-evenly'>
-                    <button onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>👈</button>
-                    <button onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}>
-                        {ppc}
+                    <button onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>
+                        <SkipBack
+                        />
                     </button>
-                    <button onClick={() => playNextTrack(setCurrentTrackIndex)}>⏭️</button>
+                    <button onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}>
+                        {ppc=== 'play' ?
+                    <Play/>
+                    :
+                    <Pause/>    
+                    }
+                    </button>
+                    <button onClick={() => playNextTrack(setCurrentTrackIndex)}>
+                    <SkipForward
+                    />
+                    </button>
                 </div>
                 {/* Seek bar */}
                 <input
@@ -178,12 +189,14 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo,
                     </div>
                 </div>
                 <Button
-                    className='absolute top-0 right-0  '
+                    className='absolute bottom-[55px] right-0  '
                     onClick={() => setFullScreen(true)}
+                    variant={'secondary'}
                 >^</Button>
                 <Button
-                    className='absolute top-3 right-3  '
+                    className='absolute bottom-[55px] right-[50px]  '
                     onClick={() => setFullScreenZero(true)}
+                    variant={'secondary'}
                 >^</Button>
             </div>
         )
