@@ -1,7 +1,7 @@
 class ra {
 
     async getAvatar() {
-        const result = await fetch('https://api-codershubinc.vercel.app/v0.1/random_image')
+        const result = await fetch('https://openapihub.vercel.app/v0.1/random_image')
         const data = await result.json()
         return data?.data?.imageUrl
     }
