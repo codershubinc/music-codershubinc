@@ -1,7 +1,7 @@
 const inf = async (url: string) => {
     try {
 
-        const responce = await fetch(`https://api-codershubinc.vercel.app/v1.0/saavnCDN?link=${url}`)
+        const responce = await fetch(`https://openapihub.vercel.app/v1.0/saavnCDN?link=${url}`)
         const data = await responce.json()
         return data
     } catch (error: any) {
@@ -15,5 +15,5 @@ const inf = async (url: string) => {
 
 
 export {
-       inf
+    inf
 }
