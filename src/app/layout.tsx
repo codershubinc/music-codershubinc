@@ -62,7 +62,7 @@ export default function RootLayout({
       <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
 
       <AuthProvider>
-        <body className={`${inter.className}  bg-black `}>
+        <body className={`${inter.className}  bg-black dark `}>
 
           <ThemeProvider
             attribute="class"
