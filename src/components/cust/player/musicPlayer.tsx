@@ -129,77 +129,74 @@ const MusicPlayer: React.FC<Props> = ({ musicIds, playMusicWithId, allMusicInfo,
                 playListId={playListId}
             />
         ) :
-        
-        fullScreenZero ? (
-            <>
-                <MusicPlayerFullZero
-                    currentSongInfo={currentSongInfo}
-                    isDisplay={fullScreenZero}
-                    allMusicInfo={allMusicInfo}
-                    playMusic={handleFullScreen}
-                    setIsDisplay={setFullScreenZero}
-                    plPaFn={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}
-                    nextFn={() => playNextTrack(setCurrentTrackIndex)}
-                    prevFn={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}
-                    seekFn={(event) => handleSeek(event, audioRef, setCurrentTime)}
-                    duration={duration}
-                    currentTime={currentTime}
-                    isPlaying={isPlaying}
-                    playListId={playListId}  
-                />
-            </>
-            
-        )
-        :
-        (
-            <div className="w-[97%] mx-auto fixed bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2">
-                <div className='flex justify-evenly'>
-                    <button onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>
-                        <SkipBack
-                        />
-                    </button>
-                    <button onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}>
-                        {ppc=== 'play' ?
-                    <Play/>
-                    :
-                    <Pause/>    
-                    }
-                    </button>
-                    <button onClick={() => playNextTrack(setCurrentTrackIndex)}>
-                    <SkipForward
+
+            fullScreenZero ? (
+                <>
+                    <MusicPlayerFullZero
+                        currentSongInfo={currentSongInfo}
+                        isDisplay={fullScreenZero}
+                        allMusicInfo={allMusicInfo}
+                        playMusic={handleFullScreen}
+                        setIsDisplay={setFullScreenZero}
+                        plPaFn={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}
+                        nextFn={() => playNextTrack(setCurrentTrackIndex)}
+                        prevFn={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}
+                        seekFn={(event) => handleSeek(event, audioRef, setCurrentTime)}
+                        duration={duration}
+                        currentTime={currentTime}
+                        isPlaying={isPlaying}
+                        playListId={playListId}
                     />
-                    </button>
-                </div>
-                {/* Seek bar */}
-                <input
-                    type="range"
-                    min="0"
-                    max={duration}
-                    value={currentTime}
-                    onChange={(event) => handleSeek(event, audioRef, setCurrentTime)}
-                    style={{ width: '100%' }}
-                />
-                <div className="flex flex-row gap-5">
-                    <p className='w-[70%] overflow-hidden text-nowrap'>
-                        {DecodeHTMLEntities(currentSongInfo?.musicName || 'Play the music')}
-                    </p>
-                    <div className='w-[30%]'>
-                        {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
-                        {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+                </>
+
+            )
+                :
+                (
+                    <div className="w-[97%] mx-auto fixed bottom-0 left-0 right-0 rounded-xl bg-slate-950 p-2 m-2">
+                        <div className='flex justify-evenly'>
+                            <button title="Previous Track" onClick={() => playPreviousTrack(setCurrentTrackIndex, musicIds)}>
+                                <SkipBack />
+                            </button>
+                            <button title={ppc === 'play' ? 'Play' : 'Pause'} onClick={() => playAudio(audioRef, setPpc, setCurrentTrackIndex, setIsPlaying)}>
+                                {ppc === 'play' ? <Play /> : <Pause />}
+                            </button>
+                            <button title="Next Track" onClick={() => playNextTrack(setCurrentTrackIndex)}>
+                                <SkipForward />
+                            </button>
+                        </div>
+                        {/* Seek bar */}
+                        <label htmlFor="seek-bar" className="sr-only">Seek</label>
+                        <input
+                            id="seek-bar"
+                            type="range"
+                            min="0"
+                            max={duration}
+                            value={currentTime}
+                            onChange={(event) => handleSeek(event, audioRef, setCurrentTime)}
+                            className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                            placeholder="Seek"
+                        />
+                        <div className="flex flex-row gap-5">
+                            <p className='w-[70%] overflow-hidden text-nowrap'>
+                                {DecodeHTMLEntities(currentSongInfo?.musicName || 'Play the music')}
+                            </p>
+                            <div className='w-[30%]'>
+                                {Math.floor(currentTime / 60)}:{('0' + Math.floor(currentTime % 60)).slice(-2)} /
+                                {Math.floor(duration / 60)}:{('0' + Math.floor(duration % 60)).slice(-2)}
+                            </div>
+                        </div>
+                        <Button
+                            className='absolute bottom-[55px] right-0  '
+                            onClick={() => setFullScreen(true)}
+                            variant={'secondary'}
+                        >^</Button>
+                        <Button
+                            className='absolute bottom-[55px] right-[50px]  '
+                            onClick={() => setFullScreenZero(true)}
+                            variant={'secondary'}
+                        >^</Button>
                     </div>
-                </div>
-                <Button
-                    className='absolute bottom-[55px] right-0  '
-                    onClick={() => setFullScreen(true)}
-                    variant={'secondary'}
-                >^</Button>
-                <Button
-                    className='absolute bottom-[55px] right-[50px]  '
-                    onClick={() => setFullScreenZero(true)}
-                    variant={'secondary'}
-                >^</Button>
-            </div>
-        )
+                )
     );
 };
 
