@@ -109,7 +109,7 @@ function IndexPlayList(
                                                 {/* title of playlist */}
                                                 <p className="text-xl font-bold mb-2">{playlist.name} </p>
                                                 {/* No of Songs */}
-                                                <p className="text-xl text-slate-800 font-bold mb-2">{`  Songs  :` + playlist.musicContains.length} </p>
+                                                <p className="text-xl text-slate-700 font-bold mb-2">{`  Songs  :` + playlist.musicContains.length} </p>
 
                                             </div>
                                         </Link>

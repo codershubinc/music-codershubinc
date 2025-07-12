@@ -8,7 +8,8 @@ export class AuthRecovery {
     constructor() {
         this.clint
             .setEndpoint(conf.appwriteUrl) // Your API Endpoint
-            .setProject(conf.appwriteProjectId); // Your project ID
+            .setProject(conf.appwriteProjectId) // Your project ID
+            .setDevKey(conf.appwriteDevKey); // Dev key for Appwrite client
         this.account = new Account(this.clint);
     }
     async createPassWordRecoveryLinkByEmail({

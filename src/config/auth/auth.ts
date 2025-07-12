@@ -8,7 +8,9 @@ export class AuthService {
     constructor() {
         this.clint
             .setEndpoint(conf.appwriteUrl) // Your API Endpoint
-            .setProject(conf.appwriteProjectId); // Your project ID
+            .setProject(conf.appwriteProjectId) // Your project ID
+            .setDevKey(conf.appwriteDevKey); // Your secret API key
+
         this.account = new Account(this.clint);
     }
 

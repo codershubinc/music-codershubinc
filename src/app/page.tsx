@@ -13,15 +13,16 @@ import { RefreshCw } from "lucide-react";
 import MyPage from "@/components/cust/amp/ampPage";
 import authService from "@/config/auth/auth";
 import { useRouter } from "next/navigation";
+import LoadingScreen from "@/components/cust/loading";
 
 export default function Home() {
 
   const [whichPlayLists, setWhichPlayLists] = useState<string>();
-  const { currentUser , setCurrentUser , setIsUserLogin } = useAuth()
-  const [you, setYpu] = useState<any>()
+  const { currentUser, setCurrentUser, setIsUserLogin } = useAuth()
+  const [you, setYou] = useState<any>()
   const [all, setAll] = useState<any>()
   const [loading, setLoading] = useState(true)
-  const navigate =  useRouter()
+  const navigate = useRouter()
 
 
   const fetchPlayLists = async () => {
@@ -48,7 +49,7 @@ export default function Home() {
         if (youPlayLists?.documents) {
           console.log('got playlist infos', youPlayLists);
 
-          return setYpu(youPlayLists)
+          return setYou(youPlayLists)
         }
       }
 
@@ -82,12 +83,12 @@ export default function Home() {
     if (atLocal && currentUser) {
       console.log('at local ', atLocal);
       setWhichPlayLists(atLocal)
-      console.log('current user from localStorage if ' , currentUser);
+      console.log('current user from localStorage if ', currentUser);
     } else {
-      console.log('current user from localStorage else ' , currentUser);
+      console.log('current user from localStorage else ', currentUser);
       setWhichPlayLists('all')
     }
-  }, [currentUser  ])
+  }, [currentUser])
 
   const refreshCurrentPlaylists = () => {
     if (whichPlayLists === 'all') {
@@ -96,7 +97,7 @@ export default function Home() {
     }
 
     if (whichPlayLists === 'you') {
-      setYpu({});
+      setYou({});
       return fetchPlayLists();  // Fetch new playlists
     }
 
@@ -111,11 +112,11 @@ export default function Home() {
   const controlLog = async () => {
     if (currentUser && currentUser?.$id) {
       const logout = await authService.logout();
-      console.log("user logged out" , logout);
+      console.log("user logged out", logout);
       setCurrentUser(null)
       setIsUserLogin(false)
       navigate.push('/users/login')
-      
+
     }
     navigate.push('/users/login')
   }
@@ -180,7 +181,7 @@ export default function Home() {
       </div>
       {
         loading ?
-          <><p>Loading .....</p></>
+          <LoadingScreen />
           :
           (
             <>
@@ -194,14 +195,10 @@ export default function Home() {
                 {
                   whichPlayLists === 'fav' && <><p className="text-red-500 font-bold text-2xl " >We are adding it soon thank you </p></>
                 }
-
-
-
               </div>
               <MyPage />
             </>
           )
-
       }
     </PageUi>
 
