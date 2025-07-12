@@ -9,6 +9,7 @@ import { LampContainer } from '@/components/ui/lamp';
 import DecodeHTMLEntities from '@/utils/func/htmlDecode';
 import GetMusic from '@/utils/musicControllers/musicDB/musicFromDB';
 import Image from 'next/image';
+import LoadingScreen from '@/components/cust/loading';
 import getAvatarInitials from '@/lib/util/avatar';
 
 function Play({ playList }: { playList: any }) {
@@ -84,10 +85,7 @@ function Play({ playList }: { playList: any }) {
 
             {/* <h1 className="text-2xl font-bold mb-4 text-center">Playlist Details</h1> */}
             {loading ? (
-                <LampContainer>
-                    <p>Loading...</p>
-                    <Image src='https://www.citypng.com/public/uploads/preview/blue-round-loading-circle-icon-png-701751694961620zplcjez0da.png' alt="loading" width={100} height={100} className='bg-black animate-spin duration-75' />
-                </LampContainer>
+                <LoadingScreen />
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : musicDetails.length <= 0 ? (

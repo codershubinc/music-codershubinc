@@ -15,6 +15,8 @@ const conf = {
 
   secreteKey: String(process.env.NEXT_PUBLIC_SECRET_KEY),
 
+  appwriteDevKey: String(process.env.NEXT_PUBLIC_APPWRITE_DEV_KEY),
+
 };
 
 export default conf;
