@@ -11,7 +11,6 @@ const SearchComponent = () => {
     const [searchResults, setSearchResults] = useState<any[]>([]);
 
     const handleSearch = async () => {
-        console.log('Searching music playlists...');
         const queries: any = {
             queryType: 'name',
             queryName: searchQuery
@@ -20,14 +19,12 @@ const SearchComponent = () => {
         try {
             const results = await musicPlayList.getMusicPlayList(queries);
             setSearchResults(results.documents);
-            console.log('Search results:', results.documents);
 
         } catch (error) {
             console.error('Error searching music playlists:', error);
         }
         if (searchResults.length < 0) {
-            console.log('No results found');
-
+            // No results found
         }
     };
 
@@ -50,10 +47,10 @@ const SearchComponent = () => {
                     <h2>Search Results:</h2>
                     <ul>
                         {searchResults.map((result) => (
-                            <div key={result.$id} >
-                                <li key={result.$id}>{result.name}</li>
-                                <li key={result.$id}>avatar id = {result.musicPlayListAvatar} <CopyButton textToCopy={result.musicPlayListAvatar} />  </li>
-                            </div>
+                            <li key={result.$id} className="space-y-1">
+                                <div>{result.name}</div>
+                                <div>avatar id = {result.musicPlayListAvatar} <CopyButton textToCopy={result.musicPlayListAvatar} /></div>
+                            </li>
                         ))}
                     </ul>
                 </div>

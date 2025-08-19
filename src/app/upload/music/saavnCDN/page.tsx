@@ -24,12 +24,10 @@ function Page() {
 
         const link = formData.link
         const musicPlayListId = formData.musicPlayListId
-        console.log('kink', link, ' musicPlayListId', musicPlayListId);
         let uploadingMusicConfig
         setLoading(true)
         try {
             if (!link) {
-                console.log('Link not found' + 'enter link');
                 alert('Enter link');
                 toast.error('Link not found' + 'enter link');
                 setLoading(false)
@@ -38,10 +36,8 @@ function Page() {
             const loadSongFromApiToast = toast.loading('Loading song info from api ....')
             const result = await fetch(`https://api-codershubinc.vercel.app/v1.0/saavnCDN?link=${link}`)
             const dataJs = await result.json()
-            console.log(dataJs.data.data[0])
             const data = dataJs.data.data[0]
             if (!data.downloadUrl.find((item: any) => item.quality === "320kbps")?.url) {
-                console.log('Link not found' + 'enter link');
                 toast.error('Song data not found from api', { id: loadSongFromApiToast });
                 setLoading(false)
                 return
@@ -64,7 +60,6 @@ function Page() {
                 url: data.url
             }
             if (!musicDataFromApi.musicUri) {
-                console.log('music Link not found' + 'enter link');
                 alert('Something went wrong');
                 toast.error('Error on uploading music config ...')
                 setLoading(false)
@@ -72,28 +67,21 @@ function Page() {
             }
             uploadingMusicConfig = toast.loading('Uploading music config ....' + musicDataFromApi.musicName)
             toast.success('Music added successfully :: ' + data?.name)
-            console.log('musicDataFromApi', musicDataFromApi);
 
             const uplMusic = await uploadMusicToDb(musicDataFromApi)
 
             if (!uplMusic) {
-                console.log('uplMusic problem' + 'enter link');
                 alert('Something went wrong');
                 toast.error('Error on uploading music config ...')
                 setLoading(false)
                 return
             }
             if (!uplMusic.musicUri) {
-                console.log('Link not found' + 'enter link');
                 alert('Something went wrong');
                 setLoading(false)
                 return
             }
-            console.log('uploaded music uri', uplMusic.musicUri);
-
-            console.log('music uploaded ', uplMusic);
             // navigate.push(`/upload/music/chose-playlist-for-music?musicId=${uplMusic.$id}&playListId=${musicPlayListId}`)
-            console.log('all done now adding to playlist ');
             const aTpl = {
                 playListId: musicPlayListId,
                 musicId: uplMusic.$id
@@ -102,7 +90,7 @@ function Page() {
             addMusicToPlayList(aTpl)
 
         } catch (error) {
-            console.log('error', error);
+            console.error('error', error);
             toast.dismiss(uploadingMusicConfig)
             toast.error('Something went wrong',)
             setLoading(false)
@@ -110,9 +98,7 @@ function Page() {
     }
     const addMusicToPlayList = async (data: any) => {
         const loadingToast = toast.loading('adding to playlist ...')
-        console.log('now adding to playlist');
         setLoading(true)
-        console.log('data is', data);
 
 
         try {
@@ -120,22 +106,18 @@ function Page() {
             const result = await musicPlayList.getMusicPlayListOne(data.playListId);
             const id = data.playListId;
             if (!result) {
-                console.log('result not found');
                 setLoading(false);
                 toast.error(`Playlist with id ${id}  not found `, { id: loadingToast })
                 return
             }
-            console.log(result);
-            console.log(result.musicContains);
             const musicContains = [...result.musicContains, data.musicId];
             // =====> uploading id of music to playlist
             const uploadedPlaylistConfig = await musicPlayList.updateMusicPlayList({ id, musicContains });
-            console.log('addMusicToPlayList:', uploadedPlaylistConfig);
             setLoading(false);
 
 
         } catch (error) {
-            console.log('Error:', error);
+            console.error('Error:', error);
             setLoading(false);
             navigate.push(`/upload/music/chose-playlist-for-music?musicId=${data?.musicId}&playListId=${data?.PlayListId}`);
         }

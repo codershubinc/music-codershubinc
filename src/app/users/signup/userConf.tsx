@@ -37,7 +37,6 @@ const UserConf: React.FC = () => {
             const userCreate = await dbConfig.createDocument({
                 ...data,
             });
-            console.log('data', data, 'UserCreate', userCreate);
             if (userCreate) {
                 const encryptedId = cryptoUtil.encryptString(String(userCreate.$id));
                 setUserPrefs(userCreate)

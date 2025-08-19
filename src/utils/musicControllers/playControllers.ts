@@ -13,7 +13,6 @@ const playAudio = (audioRef: any, setPpc: any, setCurrentTrackIndex: any, isSong
             setPpc('play')
         }
     } else {
-        console.log('no audio ref');
         setPpc('pause')
         setCurrentTrackIndex(0)
         isSongPlaying(true)

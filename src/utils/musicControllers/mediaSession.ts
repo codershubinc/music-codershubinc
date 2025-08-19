@@ -21,7 +21,6 @@ const MediaSessionFunc = ({
     playFn,
 }: MediaSessionFuncProps) => {
     if (!currentSongInfo) {
-        console.log('currentSongInfo is undefined');
         return;
     }
 
@@ -70,7 +69,7 @@ const MediaSessionFunc = ({
 
         document.addEventListener('keydown', handleKeyDown);
     } else {
-        console.warn('Media Session API is not supported in this browser.');
+        // Media Session API not supported; silently no-op in production
     }
 
     // Cleanup: remove event listener on component unmount

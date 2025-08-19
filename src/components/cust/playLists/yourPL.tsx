@@ -41,12 +41,9 @@ function YourPl({ allPlayLists }: { allPlayLists: any }) {
 
     useEffect(() => {
         if (newPlayLists?.$id) {
-            console.log('new pl = ', newPlayLists);
-
 
             setPlayLists((prevState: any) => {
                 let doc = newPlayLists
-                console.log('doc', doc);
 
 
                 return [
@@ -57,7 +54,6 @@ function YourPl({ allPlayLists }: { allPlayLists: any }) {
         }
         setCreatePlaylist(false);
     }, [newPlayLists]);
-    console.log('playlists = ', playLists);
 
 
 

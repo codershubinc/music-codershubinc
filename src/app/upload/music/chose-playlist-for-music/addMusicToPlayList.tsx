@@ -20,19 +20,16 @@ function AddMusicToPlayList() {
 
             const id = data.playListId;
             if (result) {
-                console.log(result);
-                console.log(result.musicContains);
                 const musicContains = [...result.musicContains, data.musicId];
                 try {
                     const result = await musicPlayList.updateMusicPlayList({ id, musicContains });
                     setDone(true);
-                    console.log(result);
                 } catch (error) {
-                    console.log(error);
+                    console.error(error);
                 }
             }
         } catch (error) {
-            console.log('Error:', error);
+            console.error('Error:', error);
 
         }
     };

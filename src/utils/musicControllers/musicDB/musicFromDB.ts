@@ -9,7 +9,6 @@ async function GetMusic(
     try {
 
         if (playlist?.musicContains) {
-            console.log('Fetched playlist:', playlist);
             const avatarId = playlist?.musicPlayListAvatar;
 
             const musicContainsInCurrentPlaylist = playlist?.musicContains;
@@ -17,14 +16,10 @@ async function GetMusic(
             if (musicContainsInCurrentPlaylist && avatarId) {
                 const musicDocsResponse = await musicConfig.getMusicConfig(avatarId);
                 const musicDocs = musicDocsResponse.documents;
-                console.log('Fetched music documents:', musicDocs);
                 setMusicDetails(musicDocs);
             } else {
-                console.log('music contains', musicContainsInCurrentPlaylist);
-
                 const avatar = await musicConfig.getMusicConfigBy$Id(musicContainsInCurrentPlaylist);
                 const musicDocs = avatar.documents;
-                console.log('Fetched music documents:', avatar);
                 setMusicDetails(musicDocs);
             }
         } else {

@@ -28,10 +28,8 @@ function Page() {
                 createdBy: userPrefs.$id
             }
         )
-        console.log('playList', result);
         const addCreatedPlaylistToUser = async () => {
             const playlistList = userPrefs.createdPlayLists || [];
-            console.log('playlistList', playlistList);
 
             const user = await dbConfig.updatePlaylistByUser(
                 userPrefs.$id,
@@ -41,8 +39,7 @@ function Page() {
             )
             const updatedUserPrefs = await dbConfig.getDocument(user.$id)
             setUserPrefs(updatedUserPrefs)
-            console.log('user', user);
-            console.log('updated', userPrefs.createdPlayLists);
+
 
 
         }

@@ -27,7 +27,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const checkUserLogin = async () => {
-            console.log('checkUserLogin called');
 
             try {
                 const user = await authService.getCurrentUser();
@@ -38,14 +37,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setIsSongPlaying(false)
 
             } catch (error) {
-                if (error==='false') {
+                if (error === 'false') {
                     setIsUserLogin(false);
-                    console.log('User not logged in');
+                    // User not logged in
                     return
-                    
-                    
+
+
                 }
-                console.log('Error checking user login:', error);
+                console.error('Error checking user login:', error);
                 setIsUserLogin(false);
             }
         };

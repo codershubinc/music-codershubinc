@@ -12,18 +12,16 @@ const SearchIfSingerPlayListExist = () => {
     const [searchResults, setSearchResults] = useState<any[]>([]);
 
     const handleSearch = async () => {
-        console.log('Searching music playlists...');
 
         try {
             const results = await musicPlayList.getMusicPlayList(searchQuery);
             setSearchResults(results?.documents);
-            console.log('Search results:', results?.documents);
 
         } catch (error) {
             console.error('Error searching music playlists:', error);
         }
         if (searchResults?.length < 0) {
-            console.log('No results found');
+            // No results found
 
         }
     };
@@ -58,21 +56,14 @@ const SearchIfSingerPlayListExist = () => {
                     <h2>Search Results:</h2>
                     <ul>
                         {searchResults.map((result) => (
-                            <div key={result.$id} className='space-y-2 border border-solid  rounded-lg px-2 ' >
-                                <li key={result.$id}> PlayList Name : {result.name}</li>
-
-                                <li>
-
+                            <li key={result.$id} className='space-y-2 border border-solid rounded-lg px-2'>
+                                <div>PlayList Name: {result.name}</div>
+                                <div>
                                     PlayList Id = {result.$id}
                                     <p className='text-gray-500 text-sm'>copy id</p>
                                     <CopyButton textToCopy={result.$id} />
-
-                                </li>
-                                {/* <li key={result.$id}>
-                                    avatar id = {result.musicPlayListAvatar}
-                                </li> */}
-                                {/* <li className='flex items-center gap-1'> <p className='text-gray-500 text-sm'>copy avatar id</p> <CopyButton textToCopy={result.musicPlayListAvatar} /> </li> */}
-                            </div>
+                                </div>
+                            </li>
                         ))}
                     </ul>
                 </div >

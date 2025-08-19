@@ -41,7 +41,6 @@ function CreatePlaylistByUser(
                     createdBy: currentUser.$id
                 }
             )
-            console.log('playList', result);
 
             if (result) {
 
@@ -53,9 +52,7 @@ function CreatePlaylistByUser(
 
                     }
                 )
-                console.log('user', user);
                 if (user) {
-                    console.log('got a user', user);
                     isDisplay = false
                     setCreatePlaylist(false)
                     if (setUser) {
@@ -71,7 +68,7 @@ function CreatePlaylistByUser(
                 }
             }
         } catch (error: any) {
-            console.log('error', error);
+            console.error('error', error);
             tost.error('Something went wrong', { id: loadingToast })
         }
     }

@@ -25,11 +25,9 @@ const MusicPlayListUploadForm = ({ className }: { className: string }) => {
 
     const handleLanguageChange = (value: string) => {
         setLanguage(value);
-        console.log('Selected Language:', value);
     };
 
     const uploadMusicToDb = async (data: any) => {
-        console.log( 'data:' ,  data);
         setLoading(true);
         let avatarFileId = '';
         let bannerFileId = '';
@@ -39,7 +37,6 @@ const MusicPlayListUploadForm = ({ className }: { className: string }) => {
             if (data.musicAvatar && data.musicAvatar) {
                 const avatarFile = data.musicAvatar[0];
                 const avatarResponse = await userAvatarDBConfig.uploadUserAvatar(avatarFile);
-                console.log('Avatar File uploaded:', avatarResponse);
                 avatarFileId = avatarResponse.$id || '';
             }
 
@@ -47,7 +44,6 @@ const MusicPlayListUploadForm = ({ className }: { className: string }) => {
             const bannerFile = data.musicPlayListBanner?.[0];
             if (bannerFile) {
                 const bannerResponse = await userAvatarDBConfig.uploadUserAvatar(bannerFile);
-                console.log('Banner File uploaded:', bannerResponse);
                 bannerFileId = bannerResponse.$id;
             }
 
@@ -66,8 +62,6 @@ const MusicPlayListUploadForm = ({ className }: { className: string }) => {
             });
 
             if (result) {
-                console.log('Music Data:', result);
-
                 // navigate.push('upload/music');
             }
 
@@ -77,12 +71,10 @@ const MusicPlayListUploadForm = ({ className }: { className: string }) => {
 
             // Delete uploaded files if document creation fails
             if (avatarFileId) {
-                const avatarFile = await userAvatarDBConfig.deleteUserAvatar(avatarFileId);
-                console.log('Deleted uploaded avatar file:', avatarFile);
+                await userAvatarDBConfig.deleteUserAvatar(avatarFileId);
             }
             if (bannerFileId) {
-                const bannerFile = await userAvatarDBConfig.deleteUserAvatar(bannerFileId);
-                console.log('Deleted uploaded banner file:', bannerFile);
+                await userAvatarDBConfig.deleteUserAvatar(bannerFileId);
             }
 
             setLoading(false);

@@ -28,9 +28,7 @@ function AddFromMultiplePlaylist(
 ) {
 
     const playlistController = async (id: string) => {
-        console.log('playlist id', id);
         LOCAL.set('lastAddedPlaylistId', id)
-        console.log('all pl list => ', allPlayListsInfo?.documents?.length);
         // storing ref for current song info 
         const cSInfo = currentSongInfo
         if (allPlayListsInfo?.documents?.length > 0) {
@@ -40,7 +38,6 @@ function AddFromMultiplePlaylist(
                     return music;
                 }
             }).filter(Boolean);
-            console.log('contains songs', containsSongs[0]);
 
             if (containsSongs[0]?.musicContains?.includes(currentSongInfo.$id)) {
                 toast.error(DecodeHTMLEntities('Song &quot;' + (cSInfo?.musicName || '') + '&quot; is already in playlist...   ') + containsSongs[0]?.name, { id: loadingToast })
@@ -53,7 +50,6 @@ function AddFromMultiplePlaylist(
                     id,
                     prefs: [...containsSongs[0].musicContains, currentSongInfo.$id]
                 })
-                console.log('added to playlist ', updatedDoc);
                 setAllPlayListsInfo((prevState: any) => {
                     const updatedDocuments = prevState.documents.map((doc: any) => {
                         if (doc.$id === updatedDoc.$id) {
@@ -79,13 +75,12 @@ function AddFromMultiplePlaylist(
             } catch (error: any) {
                 isDisplay = false
                 setIsDisplay(false)
-                console.log('failed to add playlist', error);
+                console.error('failed to add playlist', error);
                 toast.error('failed to add playlist', { id: loadingToast })
             }
 
 
         } else {
-            console.log('no playlist found');
             toast('no playlist found')
             setCreatePlaylist(true)
         }
