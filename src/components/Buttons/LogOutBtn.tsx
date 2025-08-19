@@ -16,14 +16,13 @@ function LogOutBtn({ className, path }: { className: string, path: string }) {
         setLoading(true)
         try {
             const result = await authService.logout()
-            console.log(result);
             setLoading(false)
             setIsUserLogin(false)
             setCurrentUser({})
 
             navigate.push(`${path}`)
         } catch (error) {
-            console.log(error);
+            console.error('Logout failed:', error);
 
         }
 

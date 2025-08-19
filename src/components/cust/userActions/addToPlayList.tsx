@@ -33,26 +33,17 @@ function AddToPlayList(
     useEffect(() => {
 
         async function f(url: string) {
-            console.log('currentSongInfo.url', currentSongInfo.url);
             let res = await inf(url)
-            console.log('fetched song info', res?.data?.data[0]);
             setFetchedSongInfo(res?.data?.data[0] || [])
             // console.log(fetchedSongInfo);
 
         }
-
-        console.log('current song info.name', currentSongInfo);
         if (currentSongInfo?.url) {
-            console.log('current song info.name', currentSongInfo);
-
             f(currentSongInfo.url)
         }
-        console.log('no song url found', currentSongInfo?.url);
         if (!userPrefs) {
             getUser()
         }
-        console.log('is playList is created By user ', userPrefs?.createdPlayLists?.includes(playListId), 'pl id = ', playListId);
-        console.log('all pls', userPrefs?.createdPlayLists);
 
 
     }, [currentSongInfo])
@@ -62,27 +53,23 @@ function AddToPlayList(
             const result = await authService.getCurrentUser()
             setCurrentUser(result)
             if (result.$id) {
-                console.log('fond a user ', result);
                 const userPrefs = await dbConfig.getDocument(result.$id)
                 if (userPrefs) {
-                    console.log('got a user prefs', userPrefs);
                     setUserPrefs(userPrefs)
                     if (!userPrefs?.createdPlayLists[0]) return
-                    console.log('id = ', userPrefs?.createdPlayLists[0]);
 
                     const pl = await musicPlayListByUser.getMusicPlayListsByUser(userPrefs?.$id)
                     // console.log('all pl inf', pl);
 
 
                     if (pl) {
-                        console.log('got a playlist info', pl);
                         setAllPlayListsInfo(pl)
                     }
 
                 }
             }
         } catch (error) {
-            console.log('err', error);
+            console.error('Error fetching current user or playlists:', error);
             setUserPrefs({})
             setCurrentUser({})
         }
@@ -90,14 +77,12 @@ function AddToPlayList(
 
     useEffect(() => {
         if (playListId && currentUser) {
-            console.log('is playList is created By user ', userPrefs?.createdPlayLists?.includes(playListId))
+            // no-op: removed debug log
         }
     }, [playListId, currentUser, currentSongInfo])
 
     const playlistController = async (id: string) => {
-        console.log('playlist id', id);
         LOCAL.set('lastAddedPlaylistId', id)
-        console.log('all pl list => ', allPlayListsInfo?.documents?.length);
         // storing ref for current song info 
         const cSInfo = currentSongInfo
         if (allPlayListsInfo?.documents?.length > 0) {
@@ -107,7 +92,6 @@ function AddToPlayList(
                     return music;
                 }
             }).filter(Boolean);
-            console.log('contains songs', containsSongs[0]);
 
             if (containsSongs[0]?.musicContains?.includes(currentSongInfo.$id)) {
                 toast.error(DecodeHTMLEntities('Song &quot;' + (cSInfo?.musicName || '') + '&quot; is already in playlist...   ') + containsSongs[0]?.name, { id: loadingToast })
@@ -118,7 +102,6 @@ function AddToPlayList(
                     id,
                     prefs: [...containsSongs[0].musicContains, currentSongInfo.$id]
                 })
-                console.log('added to playlist ', updatedDoc);
                 setAllPlayListsInfo((prevState) => {
                     const updatedDocuments = prevState.documents.map((doc) => {
                         if (doc.$id === updatedDoc.$id) {
@@ -140,13 +123,12 @@ function AddToPlayList(
 
 
             } catch (error: any) {
-                console.log('failed to add playlist', error);
+                console.error('Failed to add to playlist:', error);
                 toast.error('failed to add playlist', { id: loadingToast })
             }
 
 
         } else {
-            console.log('no playlist found');
             toast('no playlist found')
             setCreatePlaylist(true)
         }
@@ -162,17 +144,15 @@ function AddToPlayList(
 
         try {
             const pl = getPlById(id)
-            console.log('pl', pl);
             if (!pl) {
                 toast.error('Something went wrong || no pl found with id', { id: loadingToast })
-                return console.log('Something went wrong');
+                return
             }
 
             const updatedDoc = await musicPlayListByUser.updateMusicPlayListByUser({
                 id,
                 prefs: pl?.musicContains?.filter((song: string) => song !== currentSongInfo.$id)
             })
-            console.log('Updated pl', updatedDoc);
 
 
 
@@ -193,7 +173,7 @@ function AddToPlayList(
             toast.success('Successfully removed from pl' + id, { id: loadingToast })
 
         } catch (error: any) {
-            console.log('failed to add playlist', error);
+            console.error('Failed to remove from playlist:', error);
             toast.error('failed to add playlist', { id: loadingToast })
         }
 

@@ -17,11 +17,10 @@ function Page() {
         const encryptedId = params.get('id');
         async function getPlDet(id: string) {
             try {
-                console.log('Fetching playlist with ID:', id);
                 const playlist = await musicPlayListByUser.getMusicPlayListByUser(id)
                 setCurrentMusicPlaylist(playlist);
             } catch (error: any) {
-                console.log('Error while feting playlist :: ', error);
+                console.error('Error while fetching playlist:', error);
                 toast.error('Error while feting playlist :: ', error?.message)
                 setError(error?.message || 'Something went wrong');
             }

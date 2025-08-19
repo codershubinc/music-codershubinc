@@ -27,19 +27,17 @@ function Page() {
     }, []);
     // >=====> getting playlist details
     useEffect(() => {
-        console.log('Fetching playlist with ID:', playListId);
         const getSongsFromPlayList = async () => {
             try {
 
                 const playlist = await musicPlayList.getMusicPlayListOne(playListId);
-                console.log('Fetched playlist:', playlist);
                 setCurrentMusicPlaylist(playlist);
                 setLoading(false);
 
 
             } catch (error) {
                 setLoading(false);
-                console.log('Error:', error);
+                console.error('Error:', error);
 
             }
 
@@ -55,7 +53,6 @@ function Page() {
             const musicContainsInCurrentPlaylist = await musicConfig.getMusicConfigBy$Id(currentMusicPlaylist?.musicContains);
             const musicDocs = musicContainsInCurrentPlaylist.documents;
             setMusicDetails(musicDocs);
-            console.log('Fetched music documents:', musicDocs);
         }
         if (currentMusicPlaylist) {
             getMusicsInPlayList();
@@ -63,11 +60,9 @@ function Page() {
 
     }, [currentMusicPlaylist])
     useEffect(() => {
-        console.log('current music details', musicDetails);
         if (!musicDetails) {
             return
         }
-        console.log('current music ids', musicDetails.map((music: any) => music.musicUri));
     }, [musicDetails])
 
 

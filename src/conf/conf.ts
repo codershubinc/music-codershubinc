@@ -1,5 +1,5 @@
 const conf = {
-  appwriteUrl: String(process.env.NEXT_PUBLIC_APPWRITE_URL),
+  appwriteUrl: String("https://fra.cloud.appwrite.io/v1"),
 
   appwriteProjectId: String(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID),
   appwriteDatabaseId: String(process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID),

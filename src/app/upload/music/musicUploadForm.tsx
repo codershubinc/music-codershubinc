@@ -29,7 +29,6 @@ const MusicUploadForm = ({ className }: { className: string }) => {
         setLanguage(value);
         // Assuming you have some logic to handle the language change
         // For example, updating the i18n settings or redirecting to a localized route
-        console.log('Selected Language:', value);
 
         // You can also perform any other logic here based on the selected language
     };
@@ -49,7 +48,7 @@ const MusicUploadForm = ({ className }: { className: string }) => {
             // const avatarFileId = avatarFile;
 
             // Create document in database
-            console.log('musicUrl:', data.musicUrl);
+            // musicUrl used below for upload
 
             const result = await musicConfig.createMusicConfig({
                 musicName: data.musicName,
@@ -67,13 +66,11 @@ const MusicUploadForm = ({ className }: { className: string }) => {
                 url: ' no url'
             });
 
-            console.log('Music Data:', result);
 
             if (result) {
                 const id = result.$id
 
                 // Add music to playlist
-                console.log(data.PlayListId);
                 navigate.push(`/upload/music/chose-playlist-for-music?musicId=${id}&playListId=${data.PlayListId}`);
             }
             setLoading(false);

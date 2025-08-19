@@ -9,7 +9,6 @@ import { useAuth } from "@/context/AuthContext";
 import musicPlayList from "@/config/dataBase/playListsDb/musicPlayList";
 import musicPlayListByUser from "@/config/dataBase/playListsDb/musicPlayListByUser";
 import LOCAL from "@/utils/func/localStorage";
-import { RefreshCw } from "lucide-react";
 import MyPage from "@/components/cust/amp/ampPage";
 import authService from "@/config/auth/auth";
 import { useRouter } from "next/navigation";
@@ -26,17 +25,17 @@ export default function Home() {
 
 
   const fetchPlayLists = async () => {
-    console.log('fetching play list user === ', currentUser);
+
     setLoading(true)
     try {
       if (whichPlayLists === 'all') {
-        console.log('fetching all', all);
+
 
         LOCAL.set('whichPlayLists', 'all')
         if (all?.documents) return
         const allPlayLists = await musicPlayList.getMusicPlayListAllWoQuery()
         if (allPlayLists?.documents) {
-          console.log('got playlist infos', allPlayLists);
+
 
           return setAll(allPlayLists)
         }
@@ -47,7 +46,7 @@ export default function Home() {
         if (you?.documents) return
         const youPlayLists = await musicPlayListByUser.getMusicPlayListsByUser(currentUser?.$id)
         if (youPlayLists?.documents) {
-          console.log('got playlist infos', youPlayLists);
+
 
           return setYou(youPlayLists)
         }
@@ -58,10 +57,9 @@ export default function Home() {
         return
       }
     } catch (error: any) {
-      console.log('ERROR AT HOME PAGE', error);
+      console.error('Error at Home page:', error);
       setLoading(false)
     } finally {
-      console.log('finally');
       setLoading(false)
     }
   }
@@ -69,8 +67,6 @@ export default function Home() {
 
   useEffect(() => {
     if (currentUser?.$id) {
-      console.log('witchPlaylist', whichPlayLists);
-      console.log('user ', currentUser);
       fetchPlayLists()
     } else {
       fetchPlayLists()
@@ -81,11 +77,8 @@ export default function Home() {
   useEffect(() => {
     let atLocal = LOCAL.get('whichPlayLists')
     if (atLocal && currentUser) {
-      console.log('at local ', atLocal);
       setWhichPlayLists(atLocal)
-      console.log('current user from localStorage if ', currentUser);
     } else {
-      console.log('current user from localStorage else ', currentUser);
       setWhichPlayLists('all')
     }
   }, [currentUser])
@@ -103,7 +96,6 @@ export default function Home() {
 
     if (whichPlayLists === 'fav') {
       // TODO: Add functionality to refresh favorite playlists once implemented
-      console.log("Refreshing favorite playlists not implemented yet.");
       return;
     }
   };
@@ -111,8 +103,7 @@ export default function Home() {
 
   const controlLog = async () => {
     if (currentUser && currentUser?.$id) {
-      const logout = await authService.logout();
-      console.log("user logged out", logout);
+      await authService.logout();
       setCurrentUser(null)
       setIsUserLogin(false)
       navigate.push('/users/login')

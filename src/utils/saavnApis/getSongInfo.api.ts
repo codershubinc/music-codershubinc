@@ -5,8 +5,7 @@ const inf = async (url: string) => {
         const data = await responce.json()
         return data
     } catch (error: any) {
-
-        console.log('saavn api error ::', error);
+        console.error('saavn api error ::', error);
 
     }
 

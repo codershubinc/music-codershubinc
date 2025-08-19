@@ -18,10 +18,8 @@ function AddSongToPlayList(id: string, show: boolean, playListId: string) {
                 }
             )
 
-            console.log('Result:', result)
-
         } catch (error) {
-            console.log('Error:', error);
+            console.error('Error adding song to playlist:', error);
             throw error
 
         }

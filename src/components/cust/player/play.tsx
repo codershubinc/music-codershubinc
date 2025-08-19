@@ -34,7 +34,6 @@ function Play({ playList }: { playList: any }) {
                     try {
                         const avatarUrl = await getAvatarInitials(playlist.musicName);
                         urls[playlist.$id] = avatarUrl;
-                        console.log('id', playlist.$id);
 
                     } catch (error) {
                         console.error(`Failed to fetch avatar for ${playlist.musicName}`, error);

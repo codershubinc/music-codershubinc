@@ -52,8 +52,7 @@ const UserDashboard: React.FC = () => {
                 console.error('Error fetching user:', error);
             }
         };
-        console.log('id in url:', IdInUrl);
-        
+
 
         fetchUser();
     }, [IdInUrl, currentUser, userPrefs]);

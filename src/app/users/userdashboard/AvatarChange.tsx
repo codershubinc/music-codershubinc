@@ -14,7 +14,7 @@ const AvatarChange: React.FC = (className) => {
     const { register, handleSubmit } = useForm();
     const [showForm, setShowForm] = useState(false);
     const [isAvatarUpdating, setIsAvatarUpdating] = useState(false);
-    const [status, setStatus] = useState(''); 
+    const [status, setStatus] = useState('');
 
     const onSubmit = async (data: any) => {
         if (data.avatar[0] && data.avatar[0].size > 5 * 1024 * 1024) {
@@ -28,25 +28,20 @@ const AvatarChange: React.FC = (className) => {
 
         try {
             const file = await userAvatarDBConfig.uploadUserAvatar(data.avatar[0]);
-            console.log('File uploaded:', file);
             if (file) {
                 setStatus('Updating your avatar...');
                 const fileId = file.$id;
 
                 if (file) {
                     const result = await userAvatarDBConfig.deleteUserAvatar(userPrefs.avatar);
-                    console.log('File deleted:', result);
 
                 }
 
                 const result = await userDbConfig.updateDocument(currentUser?.$id, {
                     avatar: fileId
                 })
-
-                console.log('User updated:', result);
                 if (result) {
                     setUserPrefs(result);
-                    console.log('userPrefs updated:', userPrefs);
 
                 }
                 setStatus('Done! Avatar will be updated across your devices soon.');
