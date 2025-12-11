@@ -25,7 +25,7 @@ const MediaSessionFunc = ({
     }
 
     const musicAvatarUrl = currentSongInfo.musicAvatar
-        ? userAvatarDBConfig.getUserAvatarPreviewWithPrefs(currentSongInfo.musicAvatar, 500)
+        ? userAvatarDBConfig.getUserAvatarView(currentSongInfo.musicAvatar)
         : currentSongInfo.musicAvatarUrl;
 
     const setupMediaSessionMetadata = () => {
@@ -34,9 +34,37 @@ const MediaSessionFunc = ({
             artist: DecodeHTMLEntities(currentSongInfo.singer?.map(singer => singer.trim()).join(', ') || 'Unknown Artist'),
             album: DecodeHTMLEntities(currentSongInfo.musicName || 'Unknown Album'),
             artwork: [
+                // Provide multiple sizes so browsers pick the best quality
+                // Edge/Chrome cache based on declared sizes, so we include
+                // larger sizes to prevent excessive compression
                 {
                     src: String(musicAvatarUrl),
-                    sizes: '500x500',
+                    sizes: '96x96',
+                    type: 'image/png',
+                },
+                {
+                    src: String(musicAvatarUrl),
+                    sizes: '128x128',
+                    type: 'image/png',
+                },
+                {
+                    src: String(musicAvatarUrl),
+                    sizes: '192x192',
+                    type: 'image/png',
+                },
+                {
+                    src: String(musicAvatarUrl),
+                    sizes: '256x256',
+                    type: 'image/png',
+                },
+                {
+                    src: String(musicAvatarUrl),
+                    sizes: '384x384',
+                    type: 'image/png',
+                },
+                {
+                    src: String(musicAvatarUrl),
+                    sizes: '512x512',
                     type: 'image/png',
                 },
             ],
