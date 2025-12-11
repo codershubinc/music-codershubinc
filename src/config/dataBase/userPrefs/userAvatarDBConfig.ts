@@ -52,6 +52,13 @@ export class UserAvatarDBConfig {
 
         )
     }
+    // Return the original/full-quality file view (no preview/resizing)
+    getUserAvatarView(avatarId: string) {
+        return this.bucket.getFileView(
+            conf.appwriteAvatarBucketId,
+            avatarId
+        )
+    }
 }
 const userAvatarDBConfig = new UserAvatarDBConfig();
 export default userAvatarDBConfig
