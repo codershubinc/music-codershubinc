@@ -22,8 +22,7 @@ export class MusicConfig {
     constructor() {
         this.client
             .setEndpoint(conf.appwriteUrl) // Your API Endpoint
-            .setProject(conf.appwriteProjectId) // Your project ID
-            .setDevKey(conf.appwriteDevKey); // Dev key for Appwrite client
+            .setProject(conf.appwriteProjectId); // Your project ID
         this.databases = new Databases(this.client)
         this.bucket = new Storage(this.client)
     }

@@ -8,8 +8,7 @@ export class IfNotUserAvatar {
     constructor() {
         this.clint
             .setEndpoint(conf.appwriteUrl) // Your API Endpoint
-            .setProject(conf.appwriteProjectId) // Your project ID
-            .setDevKey(conf.appwriteDevKey); // Dev key for Appwrite client
+            .setProject(conf.appwriteProjectId); // Your project ID
         this.avatar = new Avatars(this.clint);
     }
     getUserInitials() {
